@@ -2,7 +2,7 @@
   "algorithm": "sha256",
   "files": {
     "src/dynamic/host.js": "8d2b5e7d0a259bfa8d51cd2c41a9c1acbff1b153fcca23b299728bb3b66b5eef",
-    "src/dynamic/client.js": "ff39ac90c6e329cf89c5c502055b96004ebac77ad1f3605e26d2db1a9c45c6fc",
-    "dist/cordis-package.json": "aec140a90e0fccae86bde6f811a9c9440f3cb7ab00c421e8bc2380b84d64c7de"
+    "src/dynamic/client.js": "d8236d1369af5ffcbca44f43455708d2b4278bdad57840fba2ab5c583a1fd343",
+    "dist/cordis-package.json": "f8faf5ea7ea36036960c4221f837bd1011d14b2de1cf2fcc8781f0d293376cb7"
   }
 }
