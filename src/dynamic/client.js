@@ -23,21 +23,132 @@ return {
     }
 
     ctx.effect(() => styles.insert(`
-      .ash-root,.ash-tool{box-sizing:border-box;color:var(--dsw-alias-label-primary);letter-spacing:0}.ash-root *,.ash-tool *{box-sizing:border-box;letter-spacing:0}
-      .ash-root{width:100%;max-width:1160px;margin:0 auto;padding:22px}.ash-overlay{position:fixed;inset:0;z-index:1300;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.58);pointer-events:auto}.ash-dialog{position:relative;width:min(1180px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;background:var(--dsw-alias-bg-base);border:1px solid var(--dsw-alias-border-l2);border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.36)}
-      .ash-close{position:sticky;z-index:4;top:12px;float:right;width:34px;height:34px;margin:12px 12px -46px 0;padding:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l2);border-radius:4px;font-size:22px;line-height:1;cursor:pointer}.ash-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;min-height:62px;padding:0 48px 18px 0;border-bottom:1px solid var(--dsw-alias-border-l1)}
-      .ash-title-row{display:flex;align-items:flex-start;gap:10px;min-width:0}.ash-title{margin:0;font-size:22px;line-height:1.25;font-weight:650;overflow-wrap:anywhere}.ash-sub,.ash-target{margin-top:5px;color:var(--dsw-alias-label-secondary);font-size:12px;overflow-wrap:anywhere}.ash-toolbar,.ash-detail-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 0}.ash-detail-summary{border-bottom:1px solid var(--dsw-alias-border-l1)}
-      .ash-counts,.ash-inline,.ash-flow,.ash-meta{display:flex;align-items:center;flex-wrap:wrap;gap:7px}.ash-badge{display:inline-flex;align-items:center;min-height:25px;padding:3px 8px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l1);border-radius:4px;font-size:11px;font-weight:650;white-space:nowrap}.ash-badge[data-state='healthy'],.ash-badge[data-state='valid']{color:var(--dsw-alias-state-success-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-success-primary) 42%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 9%,transparent)}.ash-badge[data-state='error'],.ash-badge[data-state='invalid']{color:var(--dsw-alias-state-error-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 42%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 9%,transparent)}.ash-badge[data-state='running']{color:var(--dsw-alias-state-warn-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-warn-primary) 42%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-warn-primary) 9%,transparent)}.ash-badge[data-state='closed'],.ash-badge[data-state='ready']{background:var(--dsw-alias-bg-layer-2)}
-      .ash-segments{display:inline-flex;overflow:hidden;border:1px solid var(--dsw-alias-border-l2);border-radius:4px}.ash-segments button{min-height:30px;padding:4px 10px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-base);border:0;border-right:1px solid var(--dsw-alias-border-l2);font:inherit;font-size:11px;cursor:pointer}.ash-segments button:last-child{border-right:0}.ash-segments button[data-active='true']{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);font-weight:650}
-      .ash-icon-btn,.ash-open-btn,.ash-back,.ash-dl-btn{display:inline-flex;align-items:center;justify-content:center;min-height:32px;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:4px;font:inherit;cursor:pointer}.ash-icon-btn,.ash-back{width:34px;padding:0;font-size:17px;flex:0 0 auto}.ash-open-btn,.ash-dl-btn{padding:5px 9px;font-size:12px;font-weight:650}.ash-icon-btn:hover,.ash-open-btn:hover,.ash-back:hover,.ash-dl-btn:hover{border-color:var(--dsw-alias-brand-primary)}.ash-dl-btn{color:var(--dsw-alias-brand-primary);border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 35%,transparent)}
-      .ash-session-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}.ash-session-card{display:flex;min-width:0;min-height:150px;flex-direction:column;justify-content:space-between;padding:14px;color:inherit;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-border-l2);border-radius:6px;font:inherit;text-align:left;cursor:pointer}.ash-session-card:hover{border-color:var(--dsw-alias-brand-primary);background:var(--dsw-alias-bg-layer-2)}.ash-session-card[data-state='healthy']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-session-card[data-state='error']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-session-card[data-state='running']{border-left-color:var(--dsw-alias-state-warn-primary)}
-      .ash-card-head,.ash-turn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.ash-session-name{min-width:0;font-size:14px;font-weight:650;overflow-wrap:anywhere}.ash-card-stats{margin-top:16px;color:var(--dsw-alias-label-secondary);font-size:11px}.ash-latest{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:11px;border-top:1px solid var(--dsw-alias-border-l1)}.ash-latest-text{min-width:0;overflow:hidden;color:var(--dsw-alias-label-secondary);font:11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}.ash-enter{flex:0 0 auto;color:var(--dsw-alias-label-secondary);font-size:19px}
-      .ash-connection-alert{margin:12px 0 0;padding:10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-turn{padding:18px 0;border-bottom:1px solid var(--dsw-alias-border-l1)}.ash-turn:last-child{border-bottom:0}.ash-turn-index{color:var(--dsw-alias-label-secondary);font-size:11px;font-weight:650}.ash-message{width:min(88%,860px);padding:11px 12px;border-radius:6px}.ash-message[data-role='agent']{margin-left:auto;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 9%,var(--dsw-alias-bg-layer-1));border:1px solid color-mix(in srgb,var(--dsw-alias-brand-primary) 28%,var(--dsw-alias-border-l1))}.ash-message[data-role='remote']{margin-right:auto;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1)}.ash-message[data-error='true']{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 45%,transparent)}
-      .ash-role{margin-bottom:7px;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:650}.ash-turn-arrow{padding:7px 0;color:var(--dsw-alias-label-secondary);text-align:center;font-size:15px}.ash-command,.ash-stream{margin:0;color:var(--dsw-alias-label-primary);font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.ash-stream{max-height:280px;overflow:auto}.ash-stream-label{margin:9px 0 5px;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:650}.ash-failure{margin-bottom:10px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary)}.ash-failure-title{font-size:11px;font-weight:700}.ash-failure-message{margin-top:4px;font-size:11px;line-height:1.45;overflow-wrap:anywhere}.ash-meta{margin-top:8px;color:var(--dsw-alias-label-secondary);font-size:10px}
-      .ash-empty{padding:42px 12px;color:var(--dsw-alias-label-secondary);border-top:1px solid var(--dsw-alias-border-l1);border-bottom:1px solid var(--dsw-alias-border-l1);text-align:center;font-size:12px}.ash-error-banner{margin-bottom:12px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-streaming{display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--dsw-alias-state-warn-primary);border-radius:50%;animation:ash-pulse 1.2s ease-in-out infinite}@keyframes ash-pulse{0%,100%{opacity:1}50%{opacity:.35}}.ash-task-card{margin:8px 0;padding:12px;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-border-l2);border-radius:6px}.ash-task-card[data-state='running']{border-left-color:var(--dsw-alias-state-warn-primary)}.ash-task-card[data-state='success']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-task-card[data-state='failed'],.ash-task-card[data-state='timeout']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-task-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.ash-task-name{font-size:13px;font-weight:650}.ash-task-meta{margin-top:8px;color:var(--dsw-alias-label-secondary);font-size:11px}.ash-task-message{margin-top:6px;padding:6px 8px;background:var(--dsw-alias-bg-layer-2);border-radius:4px;font-size:11px;line-height:1.45}
-      .ash-tool{margin:6px 0;overflow:hidden;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-state-warn-primary);border-radius:6px}.ash-tool[data-state='valid']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-tool[data-state='invalid']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-tool-head{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:45px;gap:10px;padding:9px 10px;color:inherit;background:transparent;border:0;font:inherit;text-align:left;cursor:pointer}.ash-tool-body{padding:11px;border-top:1px solid var(--dsw-alias-border-l1)}.ash-stage{min-width:0;max-width:170px;padding:3px 6px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l1);border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.ash-arrow{color:var(--dsw-alias-label-secondary);font-size:12px}
-      @media(max-width:840px){.ash-overlay{padding:0}.ash-dialog{width:100vw;min-height:100vh;max-height:100vh;border:0;border-radius:0}.ash-root{padding:16px}.ash-header,.ash-toolbar,.ash-detail-summary{align-items:flex-start;flex-direction:column}.ash-session-grid{grid-template-columns:1fr}.ash-message{width:94%}.ash-stage{max-width:135px}}
-    `), 'agent ssh connection health styles')
+      /* ── Codex Terminal Aesthetic ─────────────────────────────────── */
+      .cx-root,.cx-tool{box-sizing:border-box;color:#e6edf3;font-family:'JetBrains Mono','SF Mono','Cascadia Code','Consolas',monospace;letter-spacing:-0.02em}
+      .cx-root *,.cx-tool *{box-sizing:border-box;font-family:inherit}
+      .cx-root{width:100%;max-width:1200px;margin:0 auto;padding:20px;font-size:12px;line-height:1.5}
+
+      /* Overlay */
+      .cx-overlay{position:fixed;inset:0;z-index:1300;display:grid;place-items:center;padding:16px;background:rgba(1,4,9,.85);backdrop-filter:blur(6px);pointer-events:auto}
+      .cx-dialog{position:relative;width:min(1240px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;background:#0d1117;border:1px solid #30363d;border-radius:8px;box-shadow:0 0 0 1px rgba(240,246,252,.04),0 16px 48px rgba(0,0,0,.6)}
+      .cx-close{position:sticky;z-index:4;top:10px;float:right;width:30px;height:30px;margin:10px 10px -40px 0;padding:0;color:#8b949e;background:#161b22;border:1px solid #30363d;border-radius:4px;font-size:16px;line-height:1;cursor:pointer;font-family:inherit}
+      .cx-close:hover{color:#f85149;border-color:#f85149}
+
+      /* Header */
+      .cx-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;min-height:54px;padding:0 44px 16px 0;border-bottom:1px solid #21262d}
+      .cx-title-row{display:flex;align-items:flex-start;gap:10px;min-width:0}
+      .cx-title{margin:0;font-size:15px;font-weight:600;color:#f0f6fc;line-height:1.3}
+      .cx-sub,.cx-target{margin-top:4px;color:#8b949e;font-size:11px}
+      .cx-back{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;color:#8b949e;background:#161b22;border:1px solid #30363d;border-radius:4px;font-size:14px;cursor:pointer;flex:0 0 auto}
+      .cx-back:hover{color:#58a6ff;border-color:#58a6ff}
+
+      /* Toolbar */
+      .cx-toolbar,.cx-detail-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
+      .cx-detail-summary{border-bottom:1px solid #21262d}
+
+      /* Badges */
+      .cx-badge{display:inline-flex;align-items:center;min-height:22px;padding:2px 7px;color:#8b949e;background:#161b22;border:1px solid #30363d;border-radius:3px;font-size:10px;font-weight:600;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+      .cx-badge[data-state='healthy'],.cx-badge[data-state='valid'],.cx-badge[data-state='success']{color:#3fb950;border-color:rgba(63,185,80,.3);background:rgba(63,185,80,.08)}
+      .cx-badge[data-state='error'],.cx-badge[data-state='invalid'],.cx-badge[data-state='failed']{color:#f85149;border-color:rgba(248,81,73,.3);background:rgba(248,81,73,.08)}
+      .cx-badge[data-state='running']{color:#d29922;border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.08)}
+      .cx-badge[data-state='closed'],.cx-badge[data-state='ready']{color:#8b949e;background:#161b22}
+
+      /* Segments */
+      .cx-segments{display:inline-flex;overflow:hidden;border:1px solid #30363d;border-radius:4px}
+      .cx-segments button{min-height:28px;padding:3px 10px;color:#8b949e;background:transparent;border:0;border-right:1px solid #30363d;font:inherit;font-size:11px;cursor:pointer}
+      .cx-segments button:last-child{border-right:0}
+      .cx-segments button[data-active='true']{color:#f0f6fc;background:#1c2333;font-weight:600}
+
+      /* Buttons */
+      .cx-btn,.cx-open-btn,.cx-dl-btn{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:3px 10px;color:#c9d1d9;background:#21262d;border:1px solid #30363d;border-radius:4px;font:inherit;font-size:11px;cursor:pointer;gap:5px;transition:all .15s}
+      .cx-btn:hover,.cx-open-btn:hover,.cx-dl-btn:hover{border-color:#58a6ff;color:#58a6ff}
+      .cx-dl-btn{color:#3fb950;border-color:rgba(63,185,80,.25)}
+      .cx-dl-btn:hover{color:#3fb950;border-color:#3fb950;background:rgba(63,185,80,.1)}
+      .cx-open-btn{font-weight:600;color:#58a6ff;border-color:rgba(88,166,255,.25)}
+      .cx-open-btn:hover{color:#58a6ff;border-color:#58a6ff;background:rgba(88,166,255,.08)}
+
+      /* Session Grid */
+      .cx-session-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
+      .cx-session-card{display:flex;min-width:0;min-height:130px;flex-direction:column;justify-content:space-between;padding:14px;color:inherit;background:#161b22;border:1px solid #21262d;border-radius:6px;font:inherit;text-align:left;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+      .cx-session-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#30363d;border-radius:0 3px 3px 0}
+      .cx-session-card:hover{border-color:#30363d;background:#1c2333}
+      .cx-session-card[data-state='healthy']::before{background:#3fb950}
+      .cx-session-card[data-state='error']::before{background:#f85149}
+      .cx-session-card[data-state='running']::before{background:#d29922}
+      .cx-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+      .cx-session-name{min-width:0;font-size:13px;font-weight:600;color:#f0f6fc}
+      .cx-card-stats{margin-top:14px;color:#8b949e;font-size:10px}
+      .cx-latest{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #21262d}
+      .cx-latest-text{min-width:0;overflow:hidden;color:#8b949e;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+      .cx-enter{flex:0 0 auto;color:#484f58;font-size:16px}
+
+      /* Connection Alert */
+      .cx-connection-alert{margin:10px 0 0;padding:8px 10px;color:#f85149;background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.15);border-radius:4px;font-size:10px}
+
+      /* Dialogue Turns */
+      .cx-turn{padding:16px 0;border-bottom:1px solid #21262d}
+      .cx-turn:last-child{border-bottom:0}
+      .cx-turn-index{color:#8b949e;font-size:10px;font-weight:600}
+      .cx-turn-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+
+      /* Messages */
+      .cx-message{width:min(92%,900px);padding:10px 12px;border-radius:6px;font-size:11px}
+      .cx-message[data-role='agent']{margin-left:auto;background:#1a2332;border:1px solid #1f3a5f}
+      .cx-message[data-role='remote']{margin-right:auto;background:#161b22;border:1px solid #21262d}
+      .cx-message[data-error='true']{border-color:rgba(248,81,73,.3)}
+      .cx-role{margin-bottom:6px;color:#8b949e;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+      .cx-turn-arrow{padding:8px 0;color:#484f58;text-align:center;font-size:13px}
+      .cx-command,.cx-stream{margin:0;color:#e6edf3;font-size:11px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+      .cx-stream{max-height:260px;overflow:auto;background:#0d1117;padding:8px;border-radius:4px;border:1px solid #21262d}
+      .cx-stream-label{margin:8px 0 4px;color:#8b949e;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+      .cx-failure{margin-bottom:8px;padding:8px;color:#f85149;background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.15);border-radius:4px}
+      .cx-failure-title{font-size:10px;font-weight:700}
+      .cx-failure-message{margin-top:3px;font-size:10px;line-height:1.4;color:#f85149;opacity:.85}
+      .cx-meta{margin-top:8px;color:#484f58;font-size:9px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+
+      /* Empty / Error */
+      .cx-empty{padding:48px 12px;color:#484f58;border-top:1px solid #21262d;border-bottom:1px solid #21262d;text-align:center;font-size:11px}
+      .cx-error-banner{margin-bottom:10px;padding:8px 10px;color:#f85149;background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.15);border-radius:4px;font-size:10px}
+
+      /* Tool Cards */
+      .cx-tool{margin:4px 0;overflow:hidden;background:#161b22;border:1px solid #21262d;border-radius:6px}
+      .cx-tool[data-state='valid']{border-color:rgba(63,185,80,.2)}
+      .cx-tool[data-state='invalid']{border-color:rgba(248,81,73,.2)}
+      .cx-tool[data-state='running']{border-color:rgba(210,153,34,.2)}
+      .cx-tool-head{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:40px;gap:8px;padding:8px 10px;color:inherit;background:transparent;border:0;font:inherit;text-align:left;cursor:pointer}
+      .cx-tool-body{padding:10px;border-top:1px solid #21262d}
+      .cx-stage{min-width:0;max-width:160px;padding:2px 6px;color:#8b949e;background:#0d1117;border:1px solid #21262d;border-radius:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+      .cx-arrow{color:#484f58;font-size:11px}
+      .cx-flow{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+
+      /* Task Cards */
+      .cx-task-card{margin:6px 0;padding:10px 12px;background:#161b22;border:1px solid #21262d;border-radius:6px;position:relative;overflow:hidden}
+      .cx-task-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#30363d;border-radius:0 3px 3px 0}
+      .cx-task-card[data-state='running']::before{background:#d29922}
+      .cx-task-card[data-state='success']::before{background:#3fb950}
+      .cx-task-card[data-state='failed']::before,.cx-task-card[data-state='timeout']::before{background:#f85149}
+      .cx-task-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+      .cx-task-name{font-size:12px;font-weight:600;color:#f0f6fc}
+      .cx-task-meta{margin-top:6px;color:#8b949e;font-size:10px;display:flex;flex-wrap:wrap;gap:8px}
+      .cx-task-message{margin-top:6px;padding:6px 8px;background:#0d1117;border:1px solid #21262d;border-radius:4px;font-size:10px;line-height:1.4;color:#c9d1d9}
+
+      /* Streaming Pulse */
+      .cx-pulse{display:inline-block;width:7px;height:7px;margin-right:5px;background:#d29922;border-radius:50%;animation:cx-pulse 1.2s ease-in-out infinite;vertical-align:middle}
+      @keyframes cx-pulse{0%,100%{opacity:1;box-shadow:0 0 6px #d29922}50%{opacity:.3;box-shadow:0 0 2px #d29922}}
+
+      /* Cursor blink for running */
+      .cx-cursor{display:inline-block;width:1px;height:12px;background:#3fb950;animation:cx-blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
+      @keyframes cx-blink{0%,100%{opacity:1}50%{opacity:0}}
+
+      /* Inline / Counts */
+      .cx-inline,.cx-counts{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+
+      /* Section Titles */
+      .cx-section-title{margin:18px 0 6px;font-size:12px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.06em}
+
+      /* Responsive */
+      @media(max-width:840px){.cx-overlay{padding:0}.cx-dialog{width:100vw;min-height:100vh;max-height:100vh;border:0;border-radius:0}.cx-root{padding:14px}.cx-header,.cx-toolbar,.cx-detail-summary{align-items:flex-start;flex-direction:column}.cx-session-grid{grid-template-columns:1fr}.cx-message{width:96%}.cx-stage{max-width:120px}}
+    `), 'codex ssh styles')
 
     function messageOf(error) {
       if (error && typeof error.message === 'string') return error.message
@@ -58,13 +169,16 @@ return {
 
     function formatCommandDownload(command) {
       const lines = []
-      lines.push('# SSH 命令记录')
-      lines.push('# 时间：' + command.startedAt)
-      lines.push('# 耗时：' + String(command.durationMs) + ' ms')
-      lines.push('# 结果：' + (command.valid ? '成功' : '失败') + ' | 退出码：' + (command.exitCode === null ? 'N/A' : String(command.exitCode)))
-      if (command.failure) lines.push('# 错误：' + command.failure.label + ' - ' + command.failure.message)
+      lines.push('╭──────────────────────────────────────────────')
+      lines.push('│  SSH Command Record')
+      lines.push('├──────────────────────────────────────────────')
+      lines.push('│  Time    : ' + command.startedAt)
+      lines.push('│  Duration: ' + String(command.durationMs) + ' ms')
+      lines.push('│  Result  : ' + (command.valid ? 'SUCCESS' : 'FAILED') + ' | exit=' + (command.exitCode === null ? 'N/A' : String(command.exitCode)))
+      if (command.failure) lines.push('│  Error   : ' + command.failure.label + ' - ' + command.failure.message)
+      lines.push('╰──────────────────────────────────────────────')
       lines.push('')
-      lines.push('>>> AGENT 输入 >>>')
+      lines.push('>>> AGENT INPUT >>>')
       lines.push(command.command)
       lines.push('')
       if (command.stdout) {
@@ -81,31 +195,31 @@ return {
     }
 
     function Badge(props) {
-      return h('span', { className: 'ash-badge', 'data-state': props.state }, props.children)
+      return h('span', { className: 'cx-badge', 'data-state': props.state }, props.children)
     }
 
     function statusLabel(status) {
-      if (status === 'running') return '执行中'
-      if (status === 'healthy') return '连接正常'
-      if (status === 'error') return '连接异常'
-      if (status === 'closed') return '正常断开'
-      return '待连接'
+      if (status === 'running') return 'RUNNING'
+      if (status === 'healthy') return 'CONNECTED'
+      if (status === 'error') return 'ERROR'
+      if (status === 'closed') return 'CLOSED'
+      return 'READY'
     }
 
     function taskStatusLabel(status) {
-      if (status === 'pending') return '等待启动'
-      if (status === 'running') return '运行中'
-      if (status === 'success') return '已完成'
-      if (status === 'failed') return '已失败'
-      if (status === 'timeout') return '已超时'
-      if (status === 'cancelled') return '已取消'
-      return '未知'
+      if (status === 'pending') return 'PENDING'
+      if (status === 'running') return 'RUNNING'
+      if (status === 'success') return 'SUCCESS'
+      if (status === 'failed') return 'FAILED'
+      if (status === 'timeout') return 'TIMEOUT'
+      if (status === 'cancelled') return 'CANCELLED'
+      return 'UNKNOWN'
     }
 
     function taskStatusColor(status) {
       if (status === 'running') return 'running'
-      if (status === 'success') return 'valid'
-      if (status === 'failed' || status === 'timeout') return 'invalid'
+      if (status === 'success') return 'success'
+      if (status === 'failed' || status === 'timeout') return 'failed'
       if (status === 'cancelled') return 'closed'
       return 'ready'
     }
@@ -117,28 +231,28 @@ return {
 
     function failureFor(command) {
       if (command && command.failure && typeof command.failure === 'object') return command.failure
-      if (command && command.valid === false) return { kind: 'unknown', scope: 'command', label: '命令失败', message: command.error || '命令未成功完成' }
+      if (command && command.valid === false) return { kind: 'unknown', scope: 'command', label: 'FAILED', message: command.error || 'command did not complete successfully' }
       return null
     }
 
     function Flow(props) {
       const children = []
       for (let index = 0; index < props.stages.length; index += 1) {
-        if (index > 0) children.push(h('span', { className: 'ash-arrow', key: 'a' + String(index) }, '→'))
-        children.push(h('span', { className: 'ash-stage', key: 's' + String(index), title: props.stages[index] }, props.stages[index]))
+        if (index > 0) children.push(h('span', { className: 'cx-arrow', key: 'a' + String(index) }, '▸'))
+        children.push(h('span', { className: 'cx-stage', key: 's' + String(index), title: props.stages[index] }, props.stages[index]))
       }
-      return h('div', { className: 'ash-flow' }, children)
+      return h('div', { className: 'cx-flow' }, children)
     }
 
     function RemoteResponse(props) {
       const command = props.command
       const failure = failureFor(command)
-      const children = [h('div', { className: 'ash-role', key: 'role' }, '远端服务器')]
-      if (failure !== null) children.push(h('div', { className: 'ash-failure', key: 'failure' }, h('div', { className: 'ash-failure-title' }, failure.label), h('div', { className: 'ash-failure-message' }, failure.message)))
-      if (command.stdout) children.push(h('div', { className: 'ash-stream-label', key: 'ol' }, 'STDOUT' + (command.stdoutTruncated ? ' · 已截断' : '')), h('pre', { className: 'ash-stream', key: 'o' }, command.stdout))
-      if (command.stderr) children.push(h('div', { className: 'ash-stream-label', key: 'el' }, 'STDERR' + (command.stderrTruncated ? ' · 已截断' : '')), h('pre', { className: 'ash-stream', key: 'e' }, command.stderr))
-      if (!command.stdout && !command.stderr && failure === null) children.push(h('div', { className: 'ash-target', key: 'empty' }, '命令完成，无标准输出'))
-      return h('div', { className: 'ash-message', 'data-role': 'remote', 'data-error': failure === null ? undefined : 'true' }, children)
+      const children = [h('div', { className: 'cx-role', key: 'role' }, 'REMOTE')]
+      if (failure !== null) children.push(h('div', { className: 'cx-failure', key: 'failure' }, h('div', { className: 'cx-failure-title' }, '✕ ' + failure.label), h('div', { className: 'cx-failure-message' }, failure.message)))
+      if (command.stdout) children.push(h('div', { className: 'cx-stream-label', key: 'ol' }, 'STDOUT' + (command.stdoutTruncated ? ' · truncated' : '')), h('pre', { className: 'cx-stream', key: 'o' }, command.stdout))
+      if (command.stderr) children.push(h('div', { className: 'cx-stream-label', key: 'el' }, 'STDERR' + (command.stderrTruncated ? ' · truncated' : '')), h('pre', { className: 'cx-stream', key: 'e' }, command.stderr))
+      if (!command.stdout && !command.stderr && failure === null) children.push(h('div', { className: 'cx-target', key: 'empty' }, '(no output)'))
+      return h('div', { className: 'cx-message', 'data-role': 'remote', 'data-error': failure === null ? undefined : 'true' }, children)
     }
 
     function DialogueTurn(props) {
@@ -146,16 +260,16 @@ return {
       const isStreaming = command._streaming === true
       const failure = isStreaming ? null : failureFor(command)
       const state = isStreaming ? 'running' : (command.valid ? 'valid' : 'invalid')
-      const meta = isStreaming ? [h('span', { key: 'running' }, h('span', { className: 'ash-streaming' }), '执行中…'), h('span', { key: 'duration' }, String(command.durationMs) + ' ms')] : [h('span', { key: 'remote' }, '远端退出码 ' + (command.exitCode === null ? '—' : String(command.exitCode))), h('span', { key: 'duration' }, String(command.durationMs) + ' ms')]
-      if (!isStreaming && (command.timedOut || command.aborted || command.signal) && command.processExitCode !== null) meta.push(h('span', { key: 'process' }, 'SSH 进程退出码 ' + String(command.processExitCode)))
+      const meta = isStreaming ? [h('span', { key: 'running' }, h('span', { className: 'cx-pulse' }), 'streaming…'), h('span', { key: 'duration' }, String(command.durationMs) + 'ms')] : [h('span', { key: 'remote' }, 'exit=' + (command.exitCode === null ? '—' : String(command.exitCode))), h('span', { key: 'duration' }, String(command.durationMs) + 'ms')]
+      if (!isStreaming && (command.timedOut || command.aborted || command.signal) && command.processExitCode !== null) meta.push(h('span', { key: 'process' }, 'ssh=' + String(command.processExitCode)))
       if (!isStreaming && command.signal) meta.push(h('span', { key: 'signal' }, String(command.signal)))
-      const dlButton = isStreaming ? null : h('button', { className: 'ash-dl-btn', type: 'button', title: '下载此命令的输入输出', onClick: (e) => { e.stopPropagation(); downloadText('ssh-cmd-' + command.commandId + '.txt', formatCommandDownload(command)) }, style: { marginLeft: '8px' } }, '⬇ 下载')
-      return h('section', { className: 'ash-turn' },
-        h('div', { className: 'ash-turn-head' }, h('div', { className: 'ash-inline' }, h('span', { className: 'ash-turn-index' }, '第 ' + String(props.index + 1) + ' 段 · ' + timeText(command.startedAt)), h(Badge, { state }, isStreaming ? '执行中' : (command.valid ? '成功' : (failure ? failure.label : '命令失败')))), dlButton),
-        h('div', { className: 'ash-message', 'data-role': 'agent' }, h('div', { className: 'ash-role' }, 'Agent'), h('pre', { className: 'ash-command' }, command.command)),
-        h('div', { className: 'ash-turn-arrow' }, '↓'),
+      const dlButton = isStreaming ? null : h('button', { className: 'cx-dl-btn', type: 'button', title: 'Download I/O', onClick: (e) => { e.stopPropagation(); downloadText('ssh-cmd-' + command.commandId + '.txt', formatCommandDownload(command)) } }, '↓ DL')
+      return h('section', { className: 'cx-turn' },
+        h('div', { className: 'cx-turn-head' }, h('div', { className: 'cx-inline' }, h('span', { className: 'cx-turn-index' }, '#' + String(props.index + 1) + ' · ' + timeText(command.startedAt)), h(Badge, { state }, isStreaming ? 'STREAMING' : (command.valid ? 'OK' : (failure ? failure.label : 'FAILED')))), dlButton),
+        h('div', { className: 'cx-message', 'data-role': 'agent' }, h('div', { className: 'cx-role' }, 'AGENT'), h('pre', { className: 'cx-command' }, command.command)),
+        h('div', { className: 'cx-turn-arrow' }, '│\n↓'),
         h(RemoteResponse, { command }),
-        h('div', { className: 'ash-meta' }, meta)
+        h('div', { className: 'cx-meta' }, meta)
       )
     }
 
@@ -164,16 +278,16 @@ return {
       const latest = session.commands.length > 0 ? session.commands[0] : null
       const isStreaming = latest !== null && latest._streaming === true
       const latestFailure = latest === null ? null : failureFor(latest)
-      let preview = '尚未执行命令'
-      if (isStreaming) preview = '⏳ 执行中… ' + (latest.stdout ? latest.stdout.slice(0, 60) : '等待输出')
-      else if (session.connectionFailure) preview = session.connectionFailure.label + ' · ' + session.connectionFailure.message
-      else if (latest !== null) preview = latest.valid ? '最近命令成功' : '最近命令失败 · ' + (latestFailure ? latestFailure.label : '未知原因')
-      return h('button', { className: 'ash-session-card', 'data-state': session.status, type: 'button', onClick: props.onOpen },
+      let preview = 'no commands executed'
+      if (isStreaming) preview = '▸ streaming… ' + (latest.stdout ? latest.stdout.slice(0, 50) : 'waiting for output')
+      else if (session.connectionFailure) preview = '✕ ' + session.connectionFailure.label
+      else if (latest !== null) preview = (latest.valid ? '✓' : '✕') + ' last command ' + (latest.valid ? 'succeeded' : 'failed')
+      return h('button', { className: 'cx-session-card', 'data-state': session.status, type: 'button', onClick: props.onOpen },
         h('div', null,
-          h('div', { className: 'ash-card-head' }, h('div', null, h('div', { className: 'ash-session-name' }, session.id, isStreaming ? h('span', { className: 'ash-streaming', style: { marginLeft: '6px' } }) : null), h('div', { className: 'ash-target' }, session.target + (session.port === null ? '' : ':' + String(session.port)))), h(Badge, { state: session.status }, statusLabel(session.status))),
-          h('div', { className: 'ash-card-stats' }, h('div', { className: 'ash-inline' }, h('span', null, '命令 ' + String(session.commandCount)), h('span', null, '成功命令 ' + String(session.validCount)), h('span', null, '失败命令 ' + String(session.invalidCount))))
+          h('div', { className: 'cx-card-head' }, h('div', null, h('div', { className: 'cx-session-name' }, '┌ ' + session.id, isStreaming ? h('span', { className: 'cx-pulse', style: { marginLeft: '6px' } }) : null), h('div', { className: 'cx-target' }, '│ ' + session.target + (session.port === null ? '' : ':' + String(session.port)))), h(Badge, { state: session.status }, statusLabel(session.status))),
+          h('div', { className: 'cx-card-stats' }, h('div', { className: 'cx-inline' }, h('span', null, 'cmds:' + String(session.commandCount)), h('span', null, 'ok:' + String(session.validCount)), h('span', null, 'err:' + String(session.invalidCount))))
         ),
-        h('div', { className: 'ash-latest' }, h('span', { className: 'ash-latest-text' }, preview), h('span', { className: 'ash-enter' }, '›'))
+        h('div', { className: 'cx-latest' }, h('span', { className: 'cx-latest-text' }, preview), h('span', { className: 'cx-enter' }, '›'))
       )
     }
 
@@ -182,16 +296,17 @@ return {
       const elapsed = Math.floor(task.elapsedMs / 1000)
       const elapsedStr = elapsed < 60 ? String(elapsed) + 's' : (elapsed < 3600 ? String(Math.floor(elapsed / 60)) + 'm ' + String(elapsed % 60) + 's' : String(Math.floor(elapsed / 3600)) + 'h ' + String(Math.floor((elapsed % 3600) / 60)) + 'm')
       const color = taskStatusColor(task.status)
-      return h('div', { className: 'ash-task-card', 'data-state': color },
-        h('div', { className: 'ash-task-head' },
-          h('div', { className: 'ash-task-name' }, task.taskId, task.status === 'running' ? h('span', { className: 'ash-streaming', style: { marginLeft: '6px' } }) : null),
+      return h('div', { className: 'cx-task-card', 'data-state': color },
+        h('div', { className: 'cx-task-head' },
+          h('div', { className: 'cx-task-name' }, '◉ ' + task.taskId, task.status === 'running' ? h('span', { className: 'cx-pulse', style: { marginLeft: '6px' } }) : null),
           h(Badge, { state: color }, taskStatusLabel(task.status))
         ),
-        h('div', { className: 'ash-task-meta' },
-          h('span', null, '会话：' + task.sessionId + ' · 已运行：' + elapsedStr),
-          task.pid !== null ? h('span', null, ' · PID：' + String(task.pid)) : null
+        h('div', { className: 'cx-task-meta' },
+          h('span', null, 'session:' + task.sessionId),
+          h('span', null, 'elapsed:' + elapsedStr),
+          task.pid !== null ? h('span', null, 'pid:' + String(task.pid)) : null
         ),
-        task.message ? h('div', { className: 'ash-task-message' }, task.message) : null
+        task.message ? h('div', { className: 'cx-task-message' }, task.message) : null
       )
     }
 
@@ -205,17 +320,18 @@ return {
           const result = await host.call('dashboard.downloadSession', session.id)
           downloadText(result.filename, result.text)
         } catch (_error) {
-          // Fallback: build from local state
           const lines = []
-          lines.push('# SSH 会话：' + session.id)
-          lines.push('# 目标：' + session.target + (session.port === null ? '' : ':' + String(session.port)))
-          lines.push('# 状态：' + session.status)
-          lines.push('# 导出时间：' + new Date().toISOString())
+          lines.push('╭──────────────────────────────────────────────')
+          lines.push('│  SSH Session: ' + session.id)
+          lines.push('│  Target: ' + session.target + (session.port === null ? '' : ':' + String(session.port)))
+          lines.push('│  Status: ' + session.status)
+          lines.push('│  Exported: ' + new Date().toISOString())
+          lines.push('╰──────────────────────────────────────────────')
           lines.push('')
           for (let i = 0; i < commands.length; i += 1) {
             const cmd = commands[i]
             if (cmd._streaming) continue
-            lines.push('--- 命令 ' + String(i + 1) + ' / ' + String(commands.length) + ' ---')
+            lines.push('── Command ' + String(i + 1) + '/' + String(commands.length) + ' ──')
             lines.push(formatCommandDownload(cmd))
           }
           downloadText('ssh-session-' + session.id + '.txt', lines.join('\n'))
@@ -224,18 +340,18 @@ return {
         }
       }
       return h('div', null,
-        h('div', { className: 'ash-detail-summary' },
-          h('div', { className: 'ash-inline' }, h(Badge, { state: session.status }, statusLabel(session.status)), h('span', { className: 'ash-target' }, session.authMode === 'identity-file' ? '本地密钥' : 'SSH Agent / Config'), h('span', { className: 'ash-target' }, '最近 ' + timeText(session.lastActivityAt))),
-          h('div', { className: 'ash-counts' }, h(Badge, { state: 'ready' }, '命令 ' + String(session.commandCount)), h(Badge, { state: 'valid' }, '成功命令 ' + String(session.validCount)), h(Badge, { state: 'invalid' }, '失败命令 ' + String(session.invalidCount)))
+        h('div', { className: 'cx-detail-summary' },
+          h('div', { className: 'cx-inline' }, h(Badge, { state: session.status }, statusLabel(session.status)), h('span', { className: 'cx-target' }, session.authMode === 'identity-file' ? 'key' : 'agent'), h('span', { className: 'cx-target' }, 'last ' + timeText(session.lastActivityAt))),
+          h('div', { className: 'cx-counts' }, h(Badge, { state: 'ready' }, 'cmds:' + String(session.commandCount)), h(Badge, { state: 'valid' }, 'ok:' + String(session.validCount)), h(Badge, { state: 'invalid' }, 'err:' + String(session.invalidCount)))
         ),
-        session.connectionFailure ? h('div', { className: 'ash-connection-alert' }, h('strong', null, session.connectionFailure.label), ' · ', session.connectionFailure.message) : null,
-        commands.length > 0 ? h('div', { className: 'ash-toolbar', style: { padding: '12px 0 6px' } }, h('span', null), h('button', { className: 'ash-dl-btn', type: 'button', disabled: downloading, onClick: downloadAll }, downloading ? '⏳ 生成中…' : '⬇ 下载全部')) : null,
-        commands.length === 0 ? h('div', { className: 'ash-empty' }, '等待 Agent 执行命令') : h('div', null, commands.map((command, index) => h(DialogueTurn, { command, index, key: command.commandId })))
+        session.connectionFailure ? h('div', { className: 'cx-connection-alert' }, h('strong', null, session.connectionFailure.label), ' · ', session.connectionFailure.message) : null,
+        commands.length > 0 ? h('div', { className: 'cx-toolbar', style: { padding: '10px 0 4px' } }, h('span', null), h('button', { className: 'cx-dl-btn', type: 'button', disabled: downloading, onClick: downloadAll }, downloading ? '…' : '↓ Download All')) : null,
+        commands.length === 0 ? h('div', { className: 'cx-empty' }, '┌ waiting for agent commands\n└ no commands executed yet') : h('div', null, commands.map((command, index) => h(DialogueTurn, { command, index, key: command.commandId })))
       )
     }
 
     function Dashboard() {
-      const empty = { sessions: [], counts: { total: 0, active: 0, running: 0, connectionErrors: 0, valid: 0, invalid: 0 } }
+      const empty = { sessions: [], tasks: [], counts: { total: 0, active: 0, running: 0, connectionErrors: 0, valid: 0, invalid: 0, taskCount: 0 } }
       const [state, setState] = React.useState(empty)
       const [filter, setFilter] = React.useState('all')
       const [selectedId, setSelectedId] = React.useState(null)
@@ -256,17 +372,17 @@ return {
       }, [])
       const selected = selectedId === null ? null : state.sessions.find((session) => session.id === selectedId) || null
       const visible = state.sessions.filter((session) => filter === 'all' || (filter === 'active' && session.status !== 'closed') || session.status === filter)
-      return h('main', { className: 'ash-root' },
-        h('header', { className: 'ash-header' },
-          h('div', { className: 'ash-title-row' }, selected ? h('button', { className: 'ash-back', type: 'button', title: '返回会话列表', onClick: () => setSelectedId(null) }, '←') : null, h('div', null, h('h1', { className: 'ash-title' }, selected ? selected.id : 'Agent SSH 会话'), h('div', { className: 'ash-sub' }, selected ? selected.target + (selected.port === null ? '' : ':' + String(selected.port)) : '会话健康与命令结果分开显示'))),
-          h('div', { className: 'ash-counts' }, selected ? h(Badge, { state: selected.status }, statusLabel(selected.status)) : h(Badge, { state: 'ready' }, '会话 ' + String(state.counts.total)), h(Badge, { state: 'error' }, '连接异常 ' + String(selected ? (selected.status === 'error' ? 1 : 0) : state.counts.connectionErrors)), h(Badge, { state: 'valid' }, '成功命令 ' + String(selected ? selected.validCount : state.counts.valid)), h(Badge, { state: 'invalid' }, '失败命令 ' + String(selected ? selected.invalidCount : state.counts.invalid)))
+      return h('main', { className: 'cx-root' },
+        h('header', { className: 'cx-header' },
+          h('div', { className: 'cx-title-row' }, selected ? h('button', { className: 'cx-back', type: 'button', title: 'Back', onClick: () => setSelectedId(null) }, '←') : null, h('div', null, h('h1', { className: 'cx-title' }, selected ? '▸ ' + selected.id : 'ssh agent sessions'), h('div', { className: 'cx-sub' }, selected ? selected.target + (selected.port === null ? '' : ':' + String(selected.port)) : 'connection health · command history · async tasks'))),
+          h('div', { className: 'cx-counts' }, selected ? h(Badge, { state: selected.status }, statusLabel(selected.status)) : h(Badge, { state: 'ready' }, 'sessions:' + String(state.counts.total)), h(Badge, { state: 'error' }, 'err:' + String(selected ? (selected.status === 'error' ? 1 : 0) : state.counts.connectionErrors)), h(Badge, { state: 'valid' }, 'ok:' + String(selected ? selected.validCount : state.counts.valid)), h(Badge, { state: 'invalid' }, 'fail:' + String(selected ? selected.invalidCount : state.counts.invalid)))
         ),
         selected === null ? h('div', null,
-          h('div', { className: 'ash-toolbar' }, h('div', { className: 'ash-segments' }, h('button', { type: 'button', 'data-active': filter === 'all' ? 'true' : undefined, onClick: () => setFilter('all') }, '全部'), h('button', { type: 'button', 'data-active': filter === 'active' ? 'true' : undefined, onClick: () => setFilter('active') }, '活动'), h('button', { type: 'button', 'data-active': filter === 'running' ? 'true' : undefined, onClick: () => setFilter('running') }, '执行中'), h('button', { type: 'button', 'data-active': filter === 'error' ? 'true' : undefined, onClick: () => setFilter('error') }, '连接异常')), h('button', { className: 'ash-icon-btn', type: 'button', title: '刷新', disabled: refreshing, onClick: refresh }, '↻')),
-          error ? h('div', { className: 'ash-error-banner' }, error) : null,
-          visible.length === 0 ? h('div', { className: 'ash-empty' }, state.sessions.length === 0 ? '等待 Agent 创建 SSH 会话' : '没有匹配的会话') : h('div', { className: 'ash-session-grid' }, visible.map((session) => h(SessionCard, { session, key: session.id, onOpen: () => setSelectedId(session.id) }))),
-          state.tasks && state.tasks.length > 0 ? h('div', null, h('div', { style: { margin: '18px 0 8px', fontSize: '14px', fontWeight: 650 } }, '异步任务(' + String(state.tasks.length) + ')'), state.tasks.map((task) => h(TaskCard, { task, key: task.taskId }))) : null
-        ) : h('div', null, h('div', { className: 'ash-toolbar' }, h('span', { className: 'ash-sub' }, 'Agent 命令与远端响应按时间排列'), h('button', { className: 'ash-icon-btn', type: 'button', title: '刷新', disabled: refreshing, onClick: refresh }, '↻')), error ? h('div', { className: 'ash-error-banner' }, error) : null, h(SessionDetail, { session: selected }))
+          h('div', { className: 'cx-toolbar' }, h('div', { className: 'cx-segments' }, h('button', { type: 'button', 'data-active': filter === 'all' ? 'true' : undefined, onClick: () => setFilter('all') }, 'ALL'), h('button', { type: 'button', 'data-active': filter === 'active' ? 'true' : undefined, onClick: () => setFilter('active') }, 'ACTIVE'), h('button', { type: 'button', 'data-active': filter === 'running' ? 'true' : undefined, onClick: () => setFilter('running') }, 'RUNNING'), h('button', { type: 'button', 'data-active': filter === 'error' ? 'true' : undefined, onClick: () => setFilter('error') }, 'ERROR')), h('button', { className: 'cx-btn', type: 'button', title: 'Refresh', disabled: refreshing, onClick: refresh }, '↻')),
+          error ? h('div', { className: 'cx-error-banner' }, error) : null,
+          visible.length === 0 ? h('div', { className: 'cx-empty' }, state.sessions.length === 0 ? '┌ no ssh sessions\n└ use ssh_session_open to create one' : 'no matching sessions') : h('div', { className: 'cx-session-grid' }, visible.map((session) => h(SessionCard, { session, key: session.id, onOpen: () => setSelectedId(session.id) }))),
+          state.tasks && state.tasks.length > 0 ? h('div', null, h('div', { className: 'cx-section-title' }, 'async tasks (' + String(state.tasks.length) + ')'), state.tasks.map((task) => h(TaskCard, { task, key: task.taskId }))) : null
+        ) : h('div', null, h('div', { className: 'cx-toolbar' }, h('span', { className: 'cx-sub' }, 'agent commands · remote responses'), h('button', { className: 'cx-btn', type: 'button', title: 'Refresh', disabled: refreshing, onClick: refresh }, '↻')), error ? h('div', { className: 'cx-error-banner' }, error) : null, h(SessionDetail, { session: selected }))
       )
     }
 
@@ -288,27 +404,27 @@ return {
       const done = props.block && props.block.kind === 'tool-result'
       const state = !done ? 'running' : (result && result.valid ? 'valid' : 'invalid')
       const failure = result ? failureFor(result) : null
-      const label = state === 'running' ? '执行中' : (state === 'valid' ? '成功' : (failure ? failure.label : '命令失败'))
-      const session = typeof args.session === 'string' ? args.session : '未指定会话'
+      const label = state === 'running' ? 'RUNNING' : (state === 'valid' ? 'OK' : (failure ? failure.label : 'FAILED'))
+      const session = typeof args.session === 'string' ? args.session : '?'
       const command = typeof args.command === 'string' ? args.command : ''
       const target = result && result.target ? result.target : session
       const [expanded, setExpanded] = React.useState(false)
-      return h('article', { className: 'ash-tool', 'data-state': state }, h('button', { className: 'ash-tool-head', type: 'button', onClick: () => setExpanded((value) => !value) }, h(Flow, { stages: ['Agent', target, 'Bash', label] }), h(Badge, { state }, label)), expanded ? h('div', { className: 'ash-tool-body' }, h('div', { className: 'ash-message', 'data-role': 'agent' }, h('div', { className: 'ash-role' }, 'Agent'), h('pre', { className: 'ash-command' }, command || '(命令参数不可用)')), result ? h('div', null, h('div', { className: 'ash-turn-arrow' }, '↓'), h(RemoteResponse, { command: result })) : h('div', { className: 'ash-target' }, '等待远端返回')) : null)
+      return h('article', { className: 'cx-tool', 'data-state': state }, h('button', { className: 'cx-tool-head', type: 'button', onClick: () => setExpanded((value) => !value) }, h(Flow, { stages: ['AGENT', target, 'BASH', label] }), h(Badge, { state }, label)), expanded ? h('div', { className: 'cx-tool-body' }, h('div', { className: 'cx-message', 'data-role': 'agent' }, h('div', { className: 'cx-role' }, 'AGENT'), h('pre', { className: 'cx-command' }, command || '(args unavailable)')), result ? h('div', null, h('div', { className: 'cx-turn-arrow' }, '│\n↓'), h(RemoteResponse, { command: result })) : h('div', { className: 'cx-target' }, 'waiting for remote…')) : null)
     }
 
     function Overlay() {
       const open = useOverlayOpen()
       if (!open) return null
-      return h('div', { className: 'ash-overlay', onMouseDown: (event) => { if (event.target === event.currentTarget) setOverlayOpen(false) } }, h('div', { className: 'ash-dialog', role: 'dialog', 'aria-modal': true }, h('button', { className: 'ash-close', type: 'button', title: '关闭', onClick: () => setOverlayOpen(false) }, '×'), h(Dashboard)))
+      return h('div', { className: 'cx-overlay', onMouseDown: (event) => { if (event.target === event.currentTarget) setOverlayOpen(false) } }, h('div', { className: 'cx-dialog', role: 'dialog', 'aria-modal': true }, h('button', { className: 'cx-close', type: 'button', title: 'Close', onClick: () => setOverlayOpen(false) }, '×'), h(Dashboard)))
     }
 
     function HeaderAction() {
-      return h('button', { className: 'ash-open-btn', type: 'button', title: '打开 SSH 会话', onClick: () => setOverlayOpen(true) }, '>_ SSH')
+      return h('button', { className: 'cx-open-btn', type: 'button', title: 'SSH Sessions', onClick: () => setOverlayOpen(true) }, '>_ SSH')
     }
 
-    slots.inject('settings.section', () => slots.register({ name: 'settings.section', id: 'ssh-dashboard', order: 12, label: 'SSH 会话' }, () => h(Dashboard)))
+    slots.inject('settings.section', () => slots.register({ name: 'settings.section', id: 'ssh-dashboard', order: 12, label: 'SSH Sessions' }, () => h(Dashboard)))
     slots.inject('tool.call.toolview', () => slots.register({ name: 'tool.call.toolview', key: 'ssh_bash' }, (props) => h(ToolCard, props)))
-    slots.inject('shell.overlay', () => slots.register({ name: 'shell.overlay', id: 'agent-ssh-dashboard', order: 5, label: 'SSH 会话' }, () => h(Overlay)))
-    slots.inject('conversation.session.header.actions', () => slots.register({ name: 'conversation.session.header.actions', id: 'agent-ssh-dashboard', order: 15, label: 'SSH 会话' }, () => h(HeaderAction)))
+    slots.inject('shell.overlay', () => slots.register({ name: 'shell.overlay', id: 'agent-ssh-dashboard', order: 5, label: 'SSH Sessions' }, () => h(Overlay)))
+    slots.inject('conversation.session.header.actions', () => slots.register({ name: 'conversation.session.header.actions', id: 'agent-ssh-dashboard', order: 15, label: 'SSH Sessions' }, () => h(HeaderAction)))
   }
 }
