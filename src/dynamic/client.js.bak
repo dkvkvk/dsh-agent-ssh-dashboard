@@ -29,12 +29,12 @@ return {
       .ash-title-row{display:flex;align-items:flex-start;gap:10px;min-width:0}.ash-title{margin:0;font-size:22px;line-height:1.25;font-weight:650;overflow-wrap:anywhere}.ash-sub,.ash-target{margin-top:5px;color:var(--dsw-alias-label-secondary);font-size:12px;overflow-wrap:anywhere}.ash-toolbar,.ash-detail-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 0}.ash-detail-summary{border-bottom:1px solid var(--dsw-alias-border-l1)}
       .ash-counts,.ash-inline,.ash-flow,.ash-meta{display:flex;align-items:center;flex-wrap:wrap;gap:7px}.ash-badge{display:inline-flex;align-items:center;min-height:25px;padding:3px 8px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l1);border-radius:4px;font-size:11px;font-weight:650;white-space:nowrap}.ash-badge[data-state='healthy'],.ash-badge[data-state='valid']{color:var(--dsw-alias-state-success-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-success-primary) 42%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 9%,transparent)}.ash-badge[data-state='error'],.ash-badge[data-state='invalid']{color:var(--dsw-alias-state-error-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 42%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 9%,transparent)}.ash-badge[data-state='running']{color:var(--dsw-alias-state-warn-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-warn-primary) 42%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-warn-primary) 9%,transparent)}.ash-badge[data-state='closed'],.ash-badge[data-state='ready']{background:var(--dsw-alias-bg-layer-2)}
       .ash-segments{display:inline-flex;overflow:hidden;border:1px solid var(--dsw-alias-border-l2);border-radius:4px}.ash-segments button{min-height:30px;padding:4px 10px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-base);border:0;border-right:1px solid var(--dsw-alias-border-l2);font:inherit;font-size:11px;cursor:pointer}.ash-segments button:last-child{border-right:0}.ash-segments button[data-active='true']{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);font-weight:650}
-      .ash-icon-btn,.ash-open-btn,.ash-back,.ash-dl-btn{display:inline-flex;align-items:center;justify-content:center;min-height:32px;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:4px;font:inherit;cursor:pointer}.ash-icon-btn,.ash-back{width:34px;padding:0;font-size:17px;flex:0 0 auto}.ash-open-btn,.ash-dl-btn{padding:5px 9px;font-size:12px;font-weight:650}.ash-icon-btn:hover,.ash-open-btn:hover,.ash-back:hover,.ash-dl-btn:hover{border-color:var(--dsw-alias-brand-primary)}.ash-dl-btn{color:var(--dsw-alias-brand-primary);border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 35%,transparent)}
+      .ash-icon-btn,.ash-open-btn,.ash-back{display:inline-flex;align-items:center;justify-content:center;min-height:32px;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:4px;font:inherit;cursor:pointer}.ash-icon-btn,.ash-back{width:34px;padding:0;font-size:17px;flex:0 0 auto}.ash-open-btn{padding:5px 9px;font-size:12px;font-weight:650}.ash-icon-btn:hover,.ash-open-btn:hover,.ash-back:hover{border-color:var(--dsw-alias-brand-primary)}
       .ash-session-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}.ash-session-card{display:flex;min-width:0;min-height:150px;flex-direction:column;justify-content:space-between;padding:14px;color:inherit;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-border-l2);border-radius:6px;font:inherit;text-align:left;cursor:pointer}.ash-session-card:hover{border-color:var(--dsw-alias-brand-primary);background:var(--dsw-alias-bg-layer-2)}.ash-session-card[data-state='healthy']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-session-card[data-state='error']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-session-card[data-state='running']{border-left-color:var(--dsw-alias-state-warn-primary)}
       .ash-card-head,.ash-turn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.ash-session-name{min-width:0;font-size:14px;font-weight:650;overflow-wrap:anywhere}.ash-card-stats{margin-top:16px;color:var(--dsw-alias-label-secondary);font-size:11px}.ash-latest{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:11px;border-top:1px solid var(--dsw-alias-border-l1)}.ash-latest-text{min-width:0;overflow:hidden;color:var(--dsw-alias-label-secondary);font:11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}.ash-enter{flex:0 0 auto;color:var(--dsw-alias-label-secondary);font-size:19px}
       .ash-connection-alert{margin:12px 0 0;padding:10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-turn{padding:18px 0;border-bottom:1px solid var(--dsw-alias-border-l1)}.ash-turn:last-child{border-bottom:0}.ash-turn-index{color:var(--dsw-alias-label-secondary);font-size:11px;font-weight:650}.ash-message{width:min(88%,860px);padding:11px 12px;border-radius:6px}.ash-message[data-role='agent']{margin-left:auto;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 9%,var(--dsw-alias-bg-layer-1));border:1px solid color-mix(in srgb,var(--dsw-alias-brand-primary) 28%,var(--dsw-alias-border-l1))}.ash-message[data-role='remote']{margin-right:auto;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1)}.ash-message[data-error='true']{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 45%,transparent)}
       .ash-role{margin-bottom:7px;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:650}.ash-turn-arrow{padding:7px 0;color:var(--dsw-alias-label-secondary);text-align:center;font-size:15px}.ash-command,.ash-stream{margin:0;color:var(--dsw-alias-label-primary);font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.ash-stream{max-height:280px;overflow:auto}.ash-stream-label{margin:9px 0 5px;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:650}.ash-failure{margin-bottom:10px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary)}.ash-failure-title{font-size:11px;font-weight:700}.ash-failure-message{margin-top:4px;font-size:11px;line-height:1.45;overflow-wrap:anywhere}.ash-meta{margin-top:8px;color:var(--dsw-alias-label-secondary);font-size:10px}
-      .ash-empty{padding:42px 12px;color:var(--dsw-alias-label-secondary);border-top:1px solid var(--dsw-alias-border-l1);border-bottom:1px solid var(--dsw-alias-border-l1);text-align:center;font-size:12px}.ash-error-banner{margin-bottom:12px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-streaming{display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--dsw-alias-state-warn-primary);border-radius:50%;animation:ash-pulse 1.2s ease-in-out infinite}@keyframes ash-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+      .ash-empty{padding:42px 12px;color:var(--dsw-alias-label-secondary);border-top:1px solid var(--dsw-alias-border-l1);border-bottom:1px solid var(--dsw-alias-border-l1);text-align:center;font-size:12px}.ash-error-banner{margin-bottom:12px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}
       .ash-tool{margin:6px 0;overflow:hidden;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-state-warn-primary);border-radius:6px}.ash-tool[data-state='valid']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-tool[data-state='invalid']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-tool-head{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:45px;gap:10px;padding:9px 10px;color:inherit;background:transparent;border:0;font:inherit;text-align:left;cursor:pointer}.ash-tool-body{padding:11px;border-top:1px solid var(--dsw-alias-border-l1)}.ash-stage{min-width:0;max-width:170px;padding:3px 6px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l1);border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.ash-arrow{color:var(--dsw-alias-label-secondary);font-size:12px}
       @media(max-width:840px){.ash-overlay{padding:0}.ash-dialog{width:100vw;min-height:100vh;max-height:100vh;border:0;border-radius:0}.ash-root{padding:16px}.ash-header,.ash-toolbar,.ash-detail-summary{align-items:flex-start;flex-direction:column}.ash-session-grid{grid-template-columns:1fr}.ash-message{width:94%}.ash-stage{max-width:135px}}
     `), 'agent ssh connection health styles')
@@ -42,42 +42,6 @@ return {
     function messageOf(error) {
       if (error && typeof error.message === 'string') return error.message
       return String(error)
-    }
-
-    function downloadText(filename, text) {
-      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
-      const url = URL.createObjectURL(blob)
-      const anchor = document.createElement('a')
-      anchor.href = url
-      anchor.download = filename
-      document.body.appendChild(anchor)
-      anchor.click()
-      document.body.removeChild(anchor)
-      URL.revokeObjectURL(url)
-    }
-
-    function formatCommandDownload(command) {
-      const lines = []
-      lines.push('# SSH 命令记录')
-      lines.push('# 时间：' + command.startedAt)
-      lines.push('# 耗时：' + String(command.durationMs) + ' ms')
-      lines.push('# 结果：' + (command.valid ? '成功' : '失败') + ' | 退出码：' + (command.exitCode === null ? 'N/A' : String(command.exitCode)))
-      if (command.failure) lines.push('# 错误：' + command.failure.label + ' - ' + command.failure.message)
-      lines.push('')
-      lines.push('>>> AGENT 输入 >>>')
-      lines.push(command.command)
-      lines.push('')
-      if (command.stdout) {
-        lines.push('<<< STDOUT <<<')
-        lines.push(command.stdout)
-        lines.push('')
-      }
-      if (command.stderr) {
-        lines.push('<<< STDERR <<<')
-        lines.push(command.stderr)
-        lines.push('')
-      }
-      return lines.join('\n')
     }
 
     function Badge(props) {
@@ -125,15 +89,13 @@ return {
 
     function DialogueTurn(props) {
       const command = props.command
-      const isStreaming = command._streaming === true
-      const failure = isStreaming ? null : failureFor(command)
-      const state = isStreaming ? 'running' : (command.valid ? 'valid' : 'invalid')
-      const meta = isStreaming ? [h('span', { key: 'running' }, h('span', { className: 'ash-streaming' }), '执行中…'), h('span', { key: 'duration' }, String(command.durationMs) + ' ms')] : [h('span', { key: 'remote' }, '远端退出码 ' + (command.exitCode === null ? '—' : String(command.exitCode))), h('span', { key: 'duration' }, String(command.durationMs) + ' ms')]
-      if (!isStreaming && (command.timedOut || command.aborted || command.signal) && command.processExitCode !== null) meta.push(h('span', { key: 'process' }, 'SSH 进程退出码 ' + String(command.processExitCode)))
-      if (!isStreaming && command.signal) meta.push(h('span', { key: 'signal' }, String(command.signal)))
-      const dlButton = isStreaming ? null : h('button', { className: 'ash-dl-btn', type: 'button', title: '下载此命令的输入输出', onClick: (e) => { e.stopPropagation(); downloadText('ssh-cmd-' + command.commandId + '.txt', formatCommandDownload(command)) }, style: { marginLeft: '8px' } }, '⬇ 下载')
+      const failure = failureFor(command)
+      const state = command.valid ? 'valid' : 'invalid'
+      const meta = [h('span', { key: 'remote' }, '远端退出码 ' + (command.exitCode === null ? '—' : String(command.exitCode))), h('span', { key: 'duration' }, String(command.durationMs) + ' ms')]
+      if ((command.timedOut || command.aborted || command.signal) && command.processExitCode !== null) meta.push(h('span', { key: 'process' }, 'SSH 进程退出码 ' + String(command.processExitCode)))
+      if (command.signal) meta.push(h('span', { key: 'signal' }, String(command.signal)))
       return h('section', { className: 'ash-turn' },
-        h('div', { className: 'ash-turn-head' }, h('div', { className: 'ash-inline' }, h('span', { className: 'ash-turn-index' }, '第 ' + String(props.index + 1) + ' 段 · ' + timeText(command.startedAt)), h(Badge, { state }, isStreaming ? '执行中' : (command.valid ? '成功' : (failure ? failure.label : '命令失败')))), dlButton),
+        h('div', { className: 'ash-turn-head' }, h('span', { className: 'ash-turn-index' }, '第 ' + String(props.index + 1) + ' 段 · ' + timeText(command.startedAt)), h(Badge, { state }, command.valid ? '成功' : (failure ? failure.label : '命令失败'))),
         h('div', { className: 'ash-message', 'data-role': 'agent' }, h('div', { className: 'ash-role' }, 'Agent'), h('pre', { className: 'ash-command' }, command.command)),
         h('div', { className: 'ash-turn-arrow' }, '↓'),
         h(RemoteResponse, { command }),
@@ -144,15 +106,13 @@ return {
     function SessionCard(props) {
       const session = props.session
       const latest = session.commands.length > 0 ? session.commands[0] : null
-      const isStreaming = latest !== null && latest._streaming === true
       const latestFailure = latest === null ? null : failureFor(latest)
       let preview = '尚未执行命令'
-      if (isStreaming) preview = '⏳ 执行中… ' + (latest.stdout ? latest.stdout.slice(0, 60) : '等待输出')
-      else if (session.connectionFailure) preview = session.connectionFailure.label + ' · ' + session.connectionFailure.message
+      if (session.connectionFailure) preview = session.connectionFailure.label + ' · ' + session.connectionFailure.message
       else if (latest !== null) preview = latest.valid ? '最近命令成功' : '最近命令失败 · ' + (latestFailure ? latestFailure.label : '未知原因')
       return h('button', { className: 'ash-session-card', 'data-state': session.status, type: 'button', onClick: props.onOpen },
         h('div', null,
-          h('div', { className: 'ash-card-head' }, h('div', null, h('div', { className: 'ash-session-name' }, session.id, isStreaming ? h('span', { className: 'ash-streaming', style: { marginLeft: '6px' } }) : null), h('div', { className: 'ash-target' }, session.target + (session.port === null ? '' : ':' + String(session.port)))), h(Badge, { state: session.status }, statusLabel(session.status))),
+          h('div', { className: 'ash-card-head' }, h('div', null, h('div', { className: 'ash-session-name' }, session.id), h('div', { className: 'ash-target' }, session.target + (session.port === null ? '' : ':' + String(session.port)))), h(Badge, { state: session.status }, statusLabel(session.status))),
           h('div', { className: 'ash-card-stats' }, h('div', { className: 'ash-inline' }, h('span', null, '命令 ' + String(session.commandCount)), h('span', null, '成功命令 ' + String(session.validCount)), h('span', null, '失败命令 ' + String(session.invalidCount))))
         ),
         h('div', { className: 'ash-latest' }, h('span', { className: 'ash-latest-text' }, preview), h('span', { className: 'ash-enter' }, '›'))
@@ -162,38 +122,12 @@ return {
     function SessionDetail(props) {
       const session = props.session
       const commands = session.commands.slice().reverse()
-      const [downloading, setDownloading] = React.useState(false)
-      async function downloadAll() {
-        setDownloading(true)
-        try {
-          const result = await host.call('dashboard.downloadSession', session.id)
-          downloadText(result.filename, result.text)
-        } catch (_error) {
-          // Fallback: build from local state
-          const lines = []
-          lines.push('# SSH 会话：' + session.id)
-          lines.push('# 目标：' + session.target + (session.port === null ? '' : ':' + String(session.port)))
-          lines.push('# 状态：' + session.status)
-          lines.push('# 导出时间：' + new Date().toISOString())
-          lines.push('')
-          for (let i = 0; i < commands.length; i += 1) {
-            const cmd = commands[i]
-            if (cmd._streaming) continue
-            lines.push('--- 命令 ' + String(i + 1) + ' / ' + String(commands.length) + ' ---')
-            lines.push(formatCommandDownload(cmd))
-          }
-          downloadText('ssh-session-' + session.id + '.txt', lines.join('\n'))
-        } finally {
-          setDownloading(false)
-        }
-      }
       return h('div', null,
         h('div', { className: 'ash-detail-summary' },
           h('div', { className: 'ash-inline' }, h(Badge, { state: session.status }, statusLabel(session.status)), h('span', { className: 'ash-target' }, session.authMode === 'identity-file' ? '本地密钥' : 'SSH Agent / Config'), h('span', { className: 'ash-target' }, '最近 ' + timeText(session.lastActivityAt))),
           h('div', { className: 'ash-counts' }, h(Badge, { state: 'ready' }, '命令 ' + String(session.commandCount)), h(Badge, { state: 'valid' }, '成功命令 ' + String(session.validCount)), h(Badge, { state: 'invalid' }, '失败命令 ' + String(session.invalidCount)))
         ),
         session.connectionFailure ? h('div', { className: 'ash-connection-alert' }, h('strong', null, session.connectionFailure.label), ' · ', session.connectionFailure.message) : null,
-        commands.length > 0 ? h('div', { className: 'ash-toolbar', style: { padding: '12px 0 6px' } }, h('span', null), h('button', { className: 'ash-dl-btn', type: 'button', disabled: downloading, onClick: downloadAll }, downloading ? '⏳ 生成中…' : '⬇ 下载全部')) : null,
         commands.length === 0 ? h('div', { className: 'ash-empty' }, '等待 Agent 执行命令') : h('div', null, commands.map((command, index) => h(DialogueTurn, { command, index, key: command.commandId })))
       )
     }
@@ -215,7 +149,7 @@ return {
           try { const next = await host.call('dashboard.state', {}); if (alive) { setState(next); setError('') } } catch (nextError) { if (alive) setError(messageOf(nextError)) }
         }
         tick()
-        const dispose = ctx.interval(tick, 1000)
+        const dispose = ctx.interval(tick, 2000)
         return () => { alive = false; dispose() }
       }, [])
       const selected = selectedId === null ? null : state.sessions.find((session) => session.id === selectedId) || null

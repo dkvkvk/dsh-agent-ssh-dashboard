@@ -7,8 +7,6 @@ return {
     const localCwd = ctx.shell.resolve({ command: 'ssh' }).workdir
     let nextCommandId = 0
     let sshExecutable = null
-    const pendingCommands = new Map()
-    const POLL_INTERVAL_MS = 400
 
     function errorMessage(error) {
       if (error && typeof error.message === 'string') return error.message
@@ -93,35 +91,7 @@ return {
         lastConnectionErrorAt: session.lastConnectionErrorAt,
         closedAt: session.closedAt
       }
-      if (includeCommands) {
-        const pending = pendingCommands.get(session.id)
-        const all = session.commands.slice(0, 30)
-        if (pending !== undefined) {
-          all.unshift({
-            commandId: pending.commandId,
-            session: pending.session,
-            target: pending.target,
-            command: pending.command,
-            valid: true,
-            classification: 'valid',
-            failure: null,
-            exitCode: null,
-            processExitCode: null,
-            signal: null,
-            timedOut: false,
-            aborted: false,
-            durationMs: pending.durationMs,
-            startedAt: pending.startedAt,
-            stdout: pending.stdout.slice(0, 12000),
-            stderr: pending.stderr.slice(0, 12000),
-            stdoutTruncated: pending.stdoutTruncated || pending.stdout.length > 12000,
-            stderrTruncated: pending.stderrTruncated || pending.stderr.length > 12000,
-            error: null,
-            _streaming: true
-          })
-        }
-        summary.commands = all
-      }
+      if (includeCommands) summary.commands = session.commands.slice(0, 30)
       return summary
     }
 
@@ -336,35 +306,6 @@ return {
           signal
         })
         activeProcesses.add(handle)
-        const pendingCmdId = 'cmd-' + String(nextCommandId + 1)
-        const pending = {
-          commandId: pendingCmdId,
-          session: session.id,
-          target: targetOf(session),
-          command,
-          startedAt,
-          stdout: '',
-          stderr: '',
-          stdoutTruncated: false,
-          stderrTruncated: false,
-          durationMs: 0
-        }
-        pendingCommands.set(session.id, pending)
-        let pollTimer = null
-        const pollOutput = () => {
-          if (handle === null || pendingCommands.get(session.id) !== pending) return
-          try {
-            const outRead = handle.collected.stdout === undefined ? null : handle.collected.stdout.readFrom(0)
-            const errRead = handle.collected.stderr === undefined ? null : handle.collected.stderr.readFrom(0)
-            pending.stdout = outRead === null ? '' : outRead.text
-            pending.stderr = errRead === null ? '' : errRead.text
-            pending.stdoutTruncated = outRead === null ? false : outRead.lossy
-            pending.stderrTruncated = errRead === null ? false : errRead.lossy
-            pending.durationMs = Date.now() - startedAtMs
-          } catch (_unreadableDuringExecution) { /* collector may not be ready yet */ }
-          pollTimer = setTimeout(pollOutput, POLL_INTERVAL_MS)
-        }
-        pollOutput()
         const timeoutReached = new Promise((resolve) => {
           cancelTimer = ctx.timeout(() => { timedOut = true; resolve(null) }, timeoutMs)
         })
@@ -420,8 +361,6 @@ return {
           error: errorMessage(error)
         }
       } finally {
-        if (pollTimer !== null) clearTimeout(pollTimer)
-        pendingCommands.delete(session.id)
         if (cancelTimer !== null) cancelTimer()
         if (handle !== null) activeProcesses.delete(handle)
         session.activeCount -= 1
@@ -455,46 +394,9 @@ return {
 
     harness.handle('dashboard.state', () => dashboardSnapshot())
 
-    harness.handle('dashboard.downloadSession', (sessionId) => {
-      const id = normalizeSessionId(sessionId)
-      const session = sessions.get(id)
-      if (session === undefined) throw new Error('未找到 SSH 会话：' + id)
-      const lines = []
-      lines.push('# SSH 会话：' + session.id)
-      lines.push('# 目标：' + targetOf(session) + (session.port !== null ? ':' + String(session.port) : ''))
-      lines.push('# 状态：' + session.status)
-      lines.push('# 命令总数：' + String(session.commandCount) + ' | 成功：' + String(session.validCount) + ' | 失败：' + String(session.invalidCount))
-      lines.push('# 导出时间：' + new Date().toISOString())
-      lines.push('')
-      const all = session.commands.slice().reverse()
-      for (let i = 0; i < all.length; i += 1) {
-        const cmd = all[i]
-        lines.push('--- 命令 ' + String(i + 1) + ' / ' + String(all.length) + ' ---')
-        lines.push('时间：' + cmd.startedAt)
-        lines.push('耗时：' + String(cmd.durationMs) + ' ms')
-        lines.push('结果：' + (cmd.valid ? '成功' : '失败') + ' | 退出码：' + (cmd.exitCode === null ? 'N/A' : String(cmd.exitCode)))
-        if (cmd.failure) lines.push('错误：' + cmd.failure.label + ' - ' + cmd.failure.message)
-        lines.push('')
-        lines.push('>>> AGENT 输入 >>>')
-        lines.push(cmd.command)
-        lines.push('')
-        if (cmd.stdout) {
-          lines.push('<<< STDOUT <<<')
-          lines.push(cmd.stdout)
-          lines.push('')
-        }
-        if (cmd.stderr) {
-          lines.push('<<< STDERR <<<')
-          lines.push(cmd.stderr)
-          lines.push('')
-        }
-      }
-      return { text: lines.join('\n'), filename: 'ssh-session-' + session.id + '-' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19) + '.txt' }
-    })
-
     harness.registerTool(ctx, harness.defineTool({
       name: 'ssh_session_open',
-      description: '【推荐使用】为 Agent 创建或重新打开一个逻辑 SSH 会话。所有远程操作请优先通过此工具和 ssh_bash 完成，这样可以在看板中实时查看输入输出。打开后状态为 ready；首次命令将验证连接。相同名称始终对应看板中的同一个会话框。',
+      description: '为 Agent 创建或重新打开一个逻辑 SSH 会话。打开后状态为 ready；首次命令将验证连接。相同名称始终对应看板中的同一个会话框。',
       parameters: {
         session: { type: 'string', required: true, description: '稳定且可读的逻辑会话名称。' },
         host: { type: 'string', required: true, description: '远程主机、IP 地址或 OpenSSH Config 别名。' },
@@ -542,7 +444,7 @@ return {
 
     harness.registerTool(ctx, harness.defineTool({
       name: 'ssh_bash',
-      description: '【推荐使用】在逻辑 SSH 会话中执行远端 Bash，这是执行远程命令的首选方式。命令执行过程中输出会实时流式显示在看板中，并支持一键下载全部输入输出。命令失败只影响该命令记录；只有明确的 SSH 认证、网络、主机密钥或异常传输故障才把会话状态设为 error。超时时 exitCode 为 null，processExitCode 单独记录本地 SSH 进程结果。',
+      description: '在逻辑 SSH 会话中执行远端 Bash。命令失败只影响该命令记录；只有明确的 SSH 认证、网络、主机密钥或异常传输故障才把会话状态设为 error。超时时 exitCode 为 null，processExitCode 单独记录本地 SSH 进程结果。',
       parameters: {
         session: { type: 'string', required: true, description: '精确逻辑会话名称。' },
         command: { type: 'string', required: true, description: '交给远端 bash -s 执行的 Bash 命令或多行脚本。' },
