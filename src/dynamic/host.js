@@ -310,6 +310,7 @@ return {
       const startedAt = new Date(startedAtMs).toISOString()
       let handle = null
       let cancelTimer = null
+      let pollTimer = null
       let timedOut = false
       let fields = null
       session.activeCount += 1
@@ -355,7 +356,6 @@ return {
           durationMs: 0
         }
         pendingCommands.set(session.id, pending)
-        let pollTimer = null
         const pollOutput = () => {
           if (handle === null || pendingCommands.get(session.id) !== pending) return
           try {
