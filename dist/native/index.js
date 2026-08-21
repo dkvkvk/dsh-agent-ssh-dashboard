@@ -1,4 +1,7 @@
 const DASHBOARD_STATE_PATH = '/dsh-agent-ssh-dashboard/api/state'
+const DASHBOARD_TASKS_PATH = '/dsh-agent-ssh-dashboard/api/tasks'
+const DASHBOARD_DOWNLOAD_SESSION_PATH = '/dsh-agent-ssh-dashboard/api/download-session'
+const DASHBOARD_DOWNLOAD_TASK_PATH = '/dsh-agent-ssh-dashboard/api/download-task'
 
 function defineTool(options) {
   const properties = {}
@@ -1085,6 +1088,52 @@ const plugin = createPlugin({})
 export const name = plugin.name
 export const inject = [...new Set([...plugin.inject, 'webServer'])]
 
+function registerRoute(ctx, path, handler, label) {
+  return ctx.effect(() => ctx.webServer.register({
+    kind: 'exact',
+    path,
+    async handler(req, res) {
+      if (req.method !== 'GET') {
+        res.writeHead(405)
+        res.end()
+        return
+      }
+      try {
+        const value = await handler()
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify(value))
+      } catch (error) {
+        res.writeHead(500, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }))
+      }
+    },
+  }), label)
+}
+
+function registerArgRoute(ctx, path, handler, label) {
+  return ctx.effect(() => ctx.webServer.register({
+    kind: 'exact',
+    path,
+    async handler(req, res) {
+      if (req.method !== 'GET') {
+        res.writeHead(405)
+        res.end()
+        return
+      }
+      try {
+        const url = new URL(req.url, 'http://localhost')
+        const arg = url.searchParams.get('id') || url.searchParams.get('session') || url.searchParams.get('task') || undefined
+        const value = await handler(arg)
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify(value))
+      } catch (error) {
+        res.writeHead(500, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }))
+      }
+    },
+  }), label)
+}
+
 export function apply(ctx) {
   const harness = {
     defineTool,
@@ -1092,26 +1141,11 @@ export function apply(ctx) {
       return ctx.effect(() => ctx.tools.register(tool), 'dsh-agent-ssh-dashboard: tool ' + tool.name)
     },
     handle(key, handler) {
-      if (key !== 'dashboard.state') throw new Error('unsupported dashboard handler: ' + key)
-      return ctx.effect(() => ctx.webServer.register({
-        kind: 'exact',
-        path: DASHBOARD_STATE_PATH,
-        async handler(req, res) {
-          if (req.method !== 'GET') {
-            res.writeHead(405)
-            res.end()
-            return
-          }
-          try {
-            const value = await handler({})
-            res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
-            res.end(JSON.stringify(value))
-          } catch (error) {
-            res.writeHead(500, { 'content-type': 'application/json; charset=utf-8' })
-            res.end(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }))
-          }
-        },
-      }), 'dsh-agent-ssh-dashboard: state route')
+      if (key === 'dashboard.state') return registerRoute(ctx, DASHBOARD_STATE_PATH, () => handler({}), 'dsh-agent-ssh-dashboard: state')
+      if (key === 'dashboard.tasks') return registerArgRoute(ctx, DASHBOARD_TASKS_PATH, (arg) => handler(arg), 'dsh-agent-ssh-dashboard: tasks')
+      if (key === 'dashboard.downloadSession') return registerArgRoute(ctx, DASHBOARD_DOWNLOAD_SESSION_PATH, (arg) => handler(arg), 'dsh-agent-ssh-dashboard: downloadSession')
+      if (key === 'dashboard.downloadTask') return registerArgRoute(ctx, DASHBOARD_DOWNLOAD_TASK_PATH, (arg) => handler(arg), 'dsh-agent-ssh-dashboard: downloadTask')
+      throw new Error('unsupported dashboard handler: ' + key)
     },
   }
   return createPlugin(harness).apply(ctx)

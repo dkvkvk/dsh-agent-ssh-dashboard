@@ -13,9 +13,20 @@ window.__ModuleLoader__.load({
       },
     }
     var host = {
-      call: async function (name) {
-        if (name !== 'dashboard.state') throw new Error('unsupported dashboard call: ' + name)
-        var response = await fetch('/dsh-agent-ssh-dashboard/api/state', { cache: 'no-store' })
+      call: async function (name, arg) {
+        var pathMap = {
+          'dashboard.state': '/dsh-agent-ssh-dashboard/api/state',
+          'dashboard.tasks': '/dsh-agent-ssh-dashboard/api/tasks',
+          'dashboard.downloadSession': '/dsh-agent-ssh-dashboard/api/download-session',
+          'dashboard.downloadTask': '/dsh-agent-ssh-dashboard/api/download-task',
+        }
+        var path = pathMap[name]
+        if (path === undefined) throw new Error('unsupported dashboard call: ' + name)
+        if (arg !== undefined && arg !== null && typeof arg !== 'object') {
+          var separator = path.indexOf('?') >= 0 ? '&' : '?'
+          path += separator + 'id=' + encodeURIComponent(String(arg))
+        }
+        var response = await fetch(path, { cache: 'no-store' })
         var value = await response.json()
         if (!response.ok) throw new Error(value && value.error ? value.error : 'dashboard request failed')
         return value
