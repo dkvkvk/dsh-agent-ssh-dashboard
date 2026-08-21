@@ -74,3 +74,21 @@ test('built artifact is a direct cordis_define payload', () => {
   assert.equal(artifact.code.host, hostSource.trimEnd())
   assert.equal(artifact.code.client, clientSource.trimEnd())
 })
+
+test('native package exposes persistent Host and Client entries', () => {
+  const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+  const nativeHost = readFileSync(join(root, 'dist', 'native', 'index.js'), 'utf8')
+  const nativeClient = readFileSync(join(root, 'dist', 'native', 'client.js'), 'utf8')
+  const patch = readFileSync(join(root, 'cordis.patch.yml'), 'utf8')
+
+  assert.equal(manifest.main, './dist/native/index.js')
+  assert.equal(manifest.exports['./client'], './dist/native/client.js')
+  assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
+  assert.equal(manifest.dsh.client.platform, 'web')
+  assert.match(patch, /id: agent-ssh-dashboard/)
+  assert.equal(nativeHost.includes('ctx.tools.register(tool)'), true)
+  assert.equal(nativeHost.includes('/dsh-agent-ssh-dashboard/api/state'), true)
+  assert.equal(nativeClient.includes('window.__ModuleLoader__.load'), true)
+  assert.equal(nativeClient.includes("fetch('/dsh-agent-ssh-dashboard/api/state'"), true)
+})
+

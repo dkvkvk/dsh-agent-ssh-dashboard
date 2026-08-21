@@ -3,6 +3,27 @@
   "version": "0.1.0",
   "description": "Agent-managed SSH sessions with a read-only drill-down dashboard for DeepSeek Harness",
   "type": "module",
+  "main": "./dist/native/index.js",
+  "exports": {
+    ".": "./dist/native/index.js",
+    "./client": "./dist/native/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "react": "^18.3.1"
+  },
   "license": "MIT",
   "author": "wuzhuoye666",
   "repository": {
@@ -26,6 +47,7 @@
   },
   "files": [
     "dist/**",
+    "cordis.patch.yml",
     "src/dynamic/**",
     "docs/**",
     "CHANGELOG.md",
@@ -36,7 +58,7 @@
   ],
   "scripts": {
     "clean": "node scripts/clean.mjs",
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs && node scripts/build-native.mjs",
     "test": "node --test test/dynamic-package.test.mjs test/host-behavior.test.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check": "npm run clean && npm run build && npm test && npm run check:secrets",

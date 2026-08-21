@@ -2,7 +2,7 @@
 
 一个面向 DeepSeek Harness Agent 的 SSH 会话管理插件。Agent 负责提供连接信息和执行远端 Bash；人类界面只读，以“一个逻辑会话一个卡片”的方式展示连接生命周期、命令统计和逐段命令响应。
 
-> 当前仓库发布的是经过真实 Ubuntu/OpenSSH 测试的 **Dynamic Cordis Package** 源码。它可由 DSH Agent 通过 `cordis_define` 安装，不会修改 DSH 安装目录。动态定义只存在于当前 DSH 进程，进程重启后需要重新定义。
+> 当前仓库同时生成原生 DSH Host/Client 包和 Dynamic Cordis Package。原生包可安装到 DSH profile 并在 Desktop 重启后自动加载；动态包仍可用于临时试运行。
 
 ## 功能
 
@@ -30,8 +30,8 @@
 
 ## 要求
 
-- DeepSeek Harness Desktop，带 Dynamic Cordis Plugin 工具。
-- Host 侧可用 `subprocess`、`shell`、`timer` 和 `tools` 服务。
+- DeepSeek Harness Desktop 2.0.1 / DSH rc.7，或兼容版本。
+- Host 侧可用 `subprocess`、`shell`、`timer`、`tools` 和 `webServer` 服务。
 - Client 侧可用 `timer` 和 Slots。
 - 本地已安装 OpenSSH `ssh`。
 - Node.js 22 或更高版本，仅用于构建和测试本仓库。
@@ -45,22 +45,46 @@ npm run check
 构建产物位于：
 
 ```text
-dist/cordis-package.json
+dist/native/index.js       原生 Host 入口
+dist/native/client.js      原生 Client 入口
+dist/cordis-package.json   动态安装载荷
 dist/checksums.json
 ```
 
 `cordis-package.json` 包含可传给 `cordis_define` 的 `plugin`、`name`、`purpose` 和 `code`。
 
-## 安装到 DSH
+## 持久安装到 DSH Desktop
 
-1. 克隆仓库并运行 `npm run build`。
-2. 在 DSH 中让 Agent 读取 `dist/cordis-package.json`。
-3. Agent 先调用 `cordis_inspect_list` 并确认依赖接口。
-4. Agent 使用 JSON 中的字段调用 `cordis_define`。
-5. 首次安装使用返回的 `pluginId/packageId` 调用 `cordis_run`，模式为 `run`。
-6. 后续更新必须对同一个 `pluginId` 使用 `kind: "existing"` 定义新 Package，再用 `update` 激活。
+1. 克隆仓库并运行 `npm run check`。
+2. 在仓库目录执行：
 
-不要把某台机器上的 `pluginId` 或 `packageId` 写进仓库；它们是运行时身份，不可跨 DSH 进程移植。
+```powershell
+dsh plugin --profile desktop add link:.
+```
+
+3. 完整退出并重新启动 DSH Desktop。
+4. 确认启动页包含 `agent-ssh-dashboard`，且 `/dsh-agent-ssh-dashboard/api/state` 返回 JSON。
+
+`link:.` 会把当前仓库作为 Desktop profile 的持久依赖。修改源码后需重新运行 `npm run build` 并重启 Desktop。卸载使用：
+
+```powershell
+dsh plugin --profile desktop remove dsh-agent-ssh-dashboard
+```
+
+## 动态安装
+
+读取 `dist/cordis-package.json`，依次调用 `cordis_define` 和 `cordis_run`。动态定义仅在当前 DSH 进程有效，适合开发测试；不要把运行时 `pluginId/packageId` 写进仓库。
+
+## 使用
+
+SSH 操作由 Agent 调用工具完成，看板只读。可以直接对 Agent 说：
+
+- “打开 SSH 会话 `prod`，主机 `server.example.com`，用户 `deploy`。”
+- “在 `prod` 上执行 `uname -a && df -h`。”
+- “列出所有 SSH 会话及命令统计。”
+- “关闭 `prod` 会话。”
+
+使用私钥时提供本机完整路径；该路径不会出现在看板和 `ssh_sessions` 返回中。第一次连接默认采用 OpenSSH `accept-new` 主机密钥策略；生产环境建议明确使用 `strict` 并预先维护 `known_hosts`。
 
 ## 开发
 

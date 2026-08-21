@@ -1,0 +1,3 @@
+- insert:
+    - id: agent-ssh-dashboard
+      name: 'dsh-agent-ssh-dashboard'
