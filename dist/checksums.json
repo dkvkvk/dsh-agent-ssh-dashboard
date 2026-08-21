@@ -1,8 +1,8 @@
 {
   "algorithm": "sha256",
   "files": {
-    "src/dynamic/host.js": "d442a5e54d7ed5734147a1d09aa0dba880bb9fad5d195cab95c7cea1489ce7ff",
-    "src/dynamic/client.js": "5b81c0a0e57d21da883c6b55bc4b84b52fb9bf31a5dcff4f2d83c1a1e6f63bc5",
-    "dist/cordis-package.json": "4d29bf136db81a4524f35ff4d0ce3ccb1d9c7c66a50f8209dfe13902bfa81628"
+    "src/dynamic/host.js": "8d2b5e7d0a259bfa8d51cd2c41a9c1acbff1b153fcca23b299728bb3b66b5eef",
+    "src/dynamic/client.js": "e9134276d56a96890a52f44018fb7ea013b64fc02ee1aa113d7588eea0808547",
+    "dist/cordis-package.json": "78029a0b185afc2ecb4ad41ea6142bda4489b4a7c48dd0fff62b82a5de86cc9c"
   }
 }

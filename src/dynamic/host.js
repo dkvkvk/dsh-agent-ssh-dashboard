@@ -220,6 +220,11 @@ return {
         if (combined.indexOf('no route to host') >= 0 || combined.indexOf('network is unreachable') >= 0) return { kind: 'no-route', scope: 'connection', label: '网络不可达', message: '当前网络没有到目标主机的可用路由' }
         if (combined.indexOf('connection closed by') >= 0 || combined.indexOf('connection reset by peer') >= 0 || combined.indexOf('broken pipe') >= 0 || combined.indexOf('kex_exchange_identification') >= 0 || combined.indexOf('banner exchange') >= 0) return { kind: 'transport-disconnect', scope: 'connection', label: '连接异常断开', message: detail || 'SSH 传输连接被非正常关闭' }
       }
+      if (fields.exitCode === 1) {
+        if (combined.indexOf('no such file') >= 0 || combined.indexOf('cannot access') >= 0 || combined.indexOf('not found') >= 0) return { kind: 'file-not-found', scope: 'command', label: '文件或资源不存在', message: detail || '目标文件或资源暂不存在（可能任务仍在运行中）' }
+        if (combined.indexOf('permission denied') >= 0) return { kind: 'permission-denied', scope: 'command', label: '权限不足', message: detail || '没有权限访问目标文件或执行命令' }
+        return { kind: 'command-error', scope: 'command', label: '命令执行出错', message: detail || '远端 Bash 以退出码 1 结束' }
+      }
       if (fields.exitCode !== null && fields.exitCode !== 0) return { kind: 'remote-exit', scope: 'command', label: '远端命令失败', message: detail || '远端 Bash 以退出码 ' + String(fields.exitCode) + ' 结束' }
       return { kind: 'infrastructure', scope: 'connection', label: 'SSH 启动失败', message: detail || 'SSH 进程无法正常启动或结束' }
     }
@@ -445,7 +450,10 @@ return {
         invalidCount += session.invalidCount
       }
       values.sort((a, b) => String(b.lastActivityAt).localeCompare(String(a.lastActivityAt)))
-      return { sessions: values, counts: { total: values.length, active: activeCount, running: runningCount, connectionErrors, valid: validCount, invalid: invalidCount } }
+      const taskList = []
+      for (const task of tasks.values()) taskList.push(taskSummary(task))
+      taskList.sort((a, b) => String(b.startedAt).localeCompare(String(a.startedAt)))
+      return { sessions: values, tasks: taskList, counts: { total: values.length, active: activeCount, running: runningCount, connectionErrors, valid: validCount, invalid: invalidCount, taskCount: taskList.length } }
     }
 
     ctx.effect(() => () => {
@@ -454,6 +462,375 @@ return {
     }, 'agent ssh process cleanup')
 
     harness.handle('dashboard.state', () => dashboardSnapshot())
+
+
+    // ── Task lifecycle management ──────────────────────────────────────────
+
+    const tasks = new Map()
+    const TASK_POLL_INTERVAL_MS = 5000
+
+    const TASK_STATUS = {
+      PENDING: 'pending',
+      RUNNING: 'running',
+      SUCCESS: 'success',
+      FAILED: 'failed',
+      TIMEOUT: 'timeout',
+      CANCELLED: 'cancelled',
+      UNKNOWN: 'unknown'
+    }
+
+    function normalizeTaskId(value) {
+      return requiredText(value, '任务标识', 128)
+    }
+
+    function taskSummary(task) {
+      return {
+        taskId: task.taskId,
+        sessionId: task.sessionId,
+        status: task.status,
+        command: task.command.slice(0, 200),
+        pid: task.pid,
+        pidAlive: task.pidAlive,
+        resultReady: task.resultReady,
+        startedAt: task.startedAt,
+        completedAt: task.completedAt,
+        elapsedMs: Date.now() - new Date(task.startedAt).getTime(),
+        exitCode: task.exitCode,
+        softTimeoutMs: task.softTimeoutMs,
+        hardTimeoutMs: task.hardTimeoutMs,
+        pollIntervalMs: task.pollIntervalMs,
+        lastPollAt: task.lastPollAt,
+        message: task.message,
+        resultData: task.resultData,
+        logTail: task.logTail
+      }
+    }
+
+    function taskDiagnostic(task) {
+      const lines = []
+      lines.push('任务 ID：' + task.taskId)
+      lines.push('会话：' + task.sessionId)
+      lines.push('状态：' + task.status)
+      lines.push('启动时间：' + task.startedAt)
+      lines.push('已运行：' + String(Math.floor((Date.now() - new Date(task.startedAt).getTime()) / 1000)) + ' 秒')
+      if (task.pid !== null) lines.push('PID：' + String(task.pid))
+      if (task.completedAt !== null) lines.push('完成时间：' + task.completedAt)
+      if (task.exitCode !== null) lines.push('退出码：' + String(task.exitCode))
+      if (task.message !== null) lines.push('消息：' + task.message)
+      return lines.join('\n')
+    }
+
+    async function executeRemoteCommand(session, command, timeoutMs, signal) {
+      const startedAtMs = Date.now()
+      const startedAt = new Date(startedAtMs).toISOString()
+      let handle = null
+      let cancelTimer = null
+      let timedOut = false
+      try {
+        const executable = await resolveSsh(signal)
+        const argv = [
+          executable, '-T',
+          '-o', 'BatchMode=yes',
+          '-o', 'LogLevel=ERROR',
+          '-o', 'ConnectTimeout=' + String(session.connectTimeoutSec),
+          '-o', 'ServerAliveInterval=15',
+          '-o', 'ServerAliveCountMax=2',
+          '-o', 'StrictHostKeyChecking=' + (session.hostKeyPolicy === 'strict' ? 'yes' : 'accept-new')
+        ]
+        if (session.port !== null) argv.push('-p', String(session.port))
+        if (session.identityFile !== '') argv.push('-i', session.identityFile, '-o', 'IdentitiesOnly=yes')
+        argv.push(targetOf(session), 'bash', '-s', '--')
+        handle = ctx.subprocess.spawn({
+          argv,
+          cwd: localCwd,
+          stdio: {
+            stdin: { data: command.endsWith('\n') ? command : command + '\n' },
+            stdout: { maxBytes: 65536 },
+            stderr: { maxBytes: 65536 }
+          },
+          graceMs: 1500,
+          signal
+        })
+        const timeoutReached = new Promise((resolve) => {
+          cancelTimer = ctx.timeout(() => { timedOut = true; resolve(null) }, timeoutMs)
+        })
+        let outcome = await Promise.race([handle.done, timeoutReached])
+        if (cancelTimer !== null) { cancelTimer(); cancelTimer = null }
+        if (timedOut) { handle.terminate(); outcome = await handle.done }
+        const stdoutRead = handle.collected.stdout === undefined ? null : handle.collected.stdout.readFrom(0)
+        const stderrRead = handle.collected.stderr === undefined ? null : handle.collected.stderr.readFrom(0)
+        const stdout = stdoutRead === null ? '' : stdoutRead.text
+        const stderr = stderrRead === null ? '' : stderrRead.text
+        const processExitCode = outcome === null ? null : outcome.exitCode
+        const exitSignal = outcome === null ? null : outcome.signal
+        const aborted = signal !== undefined && signal.aborted === true
+        const exitCode = timedOut || aborted || exitSignal !== null ? null : processExitCode
+        return {
+          transport: 'ok',
+          command,
+          exitCode,
+          processExitCode,
+          signal: exitSignal,
+          timedOut,
+          aborted,
+          durationMs: Date.now() - startedAtMs,
+          startedAt,
+          stdout,
+          stderr,
+          stdoutTruncated: stdoutRead === null ? false : stdoutRead.lossy,
+          stderrTruncated: stderrRead === null ? false : stderrRead.lossy,
+          error: timedOut ? '远程命令执行超时' : (aborted ? '远程命令执行已取消' : (exitSignal !== null ? 'SSH 进程被信号终止：' + String(exitSignal) : null))
+        }
+      } catch (error) {
+        return {
+          transport: 'failed',
+          command,
+          exitCode: null,
+          processExitCode: null,
+          signal: null,
+          timedOut: false,
+          aborted: signal !== undefined && signal.aborted === true,
+          durationMs: Date.now() - startedAtMs,
+          startedAt,
+          stdout: '',
+          stderr: '',
+          stdoutTruncated: false,
+          stderrTruncated: false,
+          error: 'SSH 传输失败：' + errorMessage(error)
+        }
+      } finally {
+        if (cancelTimer !== null) cancelTimer()
+      }
+    }
+
+    function classifyTaskStatus(transportResult, task) {
+      if (transportResult.transport === 'failed') {
+        return { status: TASK_STATUS.UNKNOWN, message: 'SSH 连接失败，无法获取任务状态：' + (transportResult.error || '未知错误') }
+      }
+
+      if (transportResult.timedOut) {
+        return { status: TASK_STATUS.UNKNOWN, message: '状态探测超时，任务可能仍在运行' }
+      }
+
+      const stdout = transportResult.stdout || ''
+      const stderr = transportResult.stderr || ''
+
+      // Parse structured status output if available
+      let parsed = null
+      try {
+        if (stdout.trim().startsWith('{')) parsed = JSON.parse(stdout.trim())
+      } catch (_ignore) { /* not JSON */ }
+
+      if (parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        if (parsed.taskStatus) return { status: parsed.taskStatus, message: parsed.message || '', resultData: parsed }
+        if (parsed.exitCode !== undefined && parsed.resultReady) {
+          return {
+            status: parsed.exitCode === 0 ? TASK_STATUS.SUCCESS : TASK_STATUS.FAILED,
+            message: parsed.message || '',
+            exitCode: parsed.exitCode,
+            resultData: parsed
+          }
+        }
+      }
+
+      // Check PID file for process liveness
+      if (task.pid !== null) {
+        const pidFile = task.pidFile
+        if (pidFile !== '') {
+          // Check if PID file exists and process is alive
+          const pidCheck = stdout.indexOf('PID_ALIVE=yes') >= 0 || stdout.indexOf('PID_ALIVE=true') >= 0
+          const pidDead = stdout.indexOf('PID_DEAD=yes') >= 0 || stdout.indexOf('PID_DEAD=true') >= 0
+          const pidFileMissing = stdout.indexOf('PID_FILE_MISSING=yes') >= 0
+          if (pidCheck) return { status: TASK_STATUS.RUNNING, message: '任务进程仍在运行' }
+          if (pidDead) {
+            // Process is dead, check for results
+            if (task.resultFile !== '') {
+              const resultReady = stdout.indexOf('RESULT_READY=yes') >= 0
+              const resultCode = (stdout.match(/RESULT_EXIT_CODE=(-?\d+)/) || [])[1]
+              if (resultReady) {
+                const code = resultCode !== undefined ? Number(resultCode) : null
+                return {
+                  status: code === 0 ? TASK_STATUS.SUCCESS : TASK_STATUS.FAILED,
+                  message: code === 0 ? '任务完成' : '任务以退出码 ' + String(code) + ' 结束',
+                  exitCode: code
+                }
+              }
+              return { status: TASK_STATUS.FAILED, message: '任务进程已结束但未生成结果文件' }
+            }
+            return { status: TASK_STATUS.FAILED, message: '任务进程已结束' }
+          }
+          if (pidFileMissing) return { status: TASK_STATUS.UNKNOWN, message: 'PID 文件丢失，无法确定任务状态' }
+        }
+      }
+
+      // Check result file
+      if (task.resultFile !== '') {
+        const resultReady = stdout.indexOf('RESULT_READY=yes') >= 0
+        const resultCode = (stdout.match(/RESULT_EXIT_CODE=(-?\d+)/) || [])[1]
+        if (resultReady && resultCode !== undefined) {
+          const code = Number(resultCode)
+          return {
+            status: code === 0 ? TASK_STATUS.SUCCESS : TASK_STATUS.FAILED,
+            message: code === 0 ? '任务完成' : '任务以退出码 ' + String(code) + ' 结束',
+            exitCode: code
+          }
+        }
+      }
+
+      // Default: if transport is OK but no clear status, check running indicators
+      if (stdout.indexOf('RUNNING') >= 0 || stdout.indexOf('running') >= 0) {
+        return { status: TASK_STATUS.RUNNING, message: '任务正在运行' }
+      }
+
+      // If we can't determine status, return UNKNOWN with diagnostics
+      return {
+        status: TASK_STATUS.UNKNOWN,
+        message: '无法确定任务状态',
+        diagnostic: {
+          stdout: stdout.slice(0, 500),
+          stderr: stderr.slice(0, 500)
+        }
+      }
+    }
+
+    function buildTaskPollCommand(task) {
+      const lines = []
+      lines.push('set -e')
+      // Check PID
+      if (task.pidFile !== '') {
+        lines.push('if [ -f "' + task.pidFile.replace(/"/g, '\\"') + '" ]; then')
+        lines.push('  _pid=$(cat "' + task.pidFile.replace(/"/g, '\\"') + '" 2>/dev/null)')
+        lines.push('  if [ -n "$_pid" ] && kill -0 "$_pid" 2>/dev/null; then')
+        lines.push('    echo "PID_ALIVE=yes"')
+        lines.push('    echo "PID=$_pid"')
+        lines.push('  else')
+        lines.push('    echo "PID_DEAD=yes"')
+        lines.push('    echo "PID=$_pid"')
+        lines.push('  fi')
+        lines.push('else')
+        lines.push('  echo "PID_FILE_MISSING=yes"')
+        lines.push('fi')
+      }
+      // Check result file
+      if (task.resultFile !== '') {
+        lines.push('if [ -f "' + task.resultFile.replace(/"/g, '\\"') + '" ]; then')
+        lines.push('  echo "RESULT_READY=yes"')
+        lines.push('  _rc=$(grep -oP "exit_code[=:]\\s*\\K\\d+" "' + task.resultFile.replace(/"/g, '\\"') + '" 2>/dev/null || echo "")')
+        lines.push('  if [ -n "$_rc" ]; then echo "RESULT_EXIT_CODE=$_rc"; fi')
+        lines.push('else')
+        lines.push('  echo "RESULT_READY=no"')
+        lines.push('fi')
+      }
+      // Check log tail
+      if (task.logFile !== '') {
+        lines.push('if [ -f "' + task.logFile.replace(/"/g, '\\"') + '" ]; then')
+        lines.push('  echo "---LOG_TAIL---"')
+        lines.push('  tail -20 "' + task.logFile.replace(/"/g, '\\"') + '" 2>/dev/null || true')
+        lines.push('  echo "---END_LOG_TAIL---"')
+        lines.push('fi')
+      }
+      return lines.join('\n')
+    }
+
+    async function pollTask(task) {
+      const now = Date.now()
+      const elapsed = now - new Date(task.startedAt).getTime()
+
+      // Check hard timeout
+      if (task.hardTimeoutMs > 0 && elapsed >= task.hardTimeoutMs) {
+        task.status = TASK_STATUS.TIMEOUT
+        task.completedAt = new Date().toISOString()
+        task.message = '任务超过硬超时时间（' + String(Math.floor(task.hardTimeoutMs / 1000)) + ' 秒），已强制终止'
+        return taskSummary(task)
+      }
+
+      // Check soft timeout
+      if (task.softTimeoutMs > 0 && elapsed >= task.softTimeoutMs && task.status === TASK_STATUS.RUNNING) {
+        task.status = TASK_STATUS.RUNNING
+        task.message = '任务运行时间超过预期（' + String(Math.floor(task.softTimeoutMs / 1000)) + ' 秒），仍在执行中'
+      }
+
+      const session = sessions.get(task.sessionId)
+      if (session === undefined) {
+        task.status = TASK_STATUS.UNKNOWN
+        task.message = '关联的 SSH 会话已不存在'
+        return taskSummary(task)
+      }
+
+      const pollCmd = buildTaskPollCommand(task)
+      const result = await executeRemoteCommand(session, pollCmd, 15000, undefined)
+
+      task.lastPollAt = new Date().toISOString()
+
+      if (result.transport === 'failed') {
+        task.status = TASK_STATUS.UNKNOWN
+        task.message = 'SSH 传输失败，无法探测任务状态：' + (result.error || '')
+        return taskSummary(task)
+      }
+
+      const classified = classifyTaskStatus(result, task)
+      const prevStatus = task.status
+
+      if (classified.status === TASK_STATUS.SUCCESS || classified.status === TASK_STATUS.FAILED) {
+        task.status = classified.status
+        task.completedAt = new Date().toISOString()
+        task.exitCode = classified.exitCode !== undefined ? classified.exitCode : null
+        task.message = classified.message
+        task.resultData = classified.resultData || null
+      } else if (classified.status === TASK_STATUS.RUNNING) {
+        task.status = TASK_STATUS.RUNNING
+        task.pidAlive = true
+        task.message = classified.message
+      } else if (classified.status === TASK_STATUS.UNKNOWN) {
+        if (prevStatus === TASK_STATUS.RUNNING || prevStatus === TASK_STATUS.PENDING) {
+          task.status = TASK_STATUS.RUNNING
+          task.message = '任务状态未知，但 SSH 连接正常，假设仍在运行'
+        } else {
+          task.status = TASK_STATUS.UNKNOWN
+          task.message = classified.message
+        }
+      }
+
+      // Extract log tail if present
+      const logMatch = result.stdout.match(/---LOG_TAIL---\n([\s\S]*?)\n---END_LOG_TAIL---/)
+      if (logMatch !== null) task.logTail = logMatch[1].slice(0, 2000)
+
+      return taskSummary(task)
+    }
+
+    // ── Task dashboard handlers ────────────────────────────────────────────
+
+    harness.handle('dashboard.tasks', (sessionId) => {
+      const result = []
+      for (const task of tasks.values()) {
+        if (sessionId !== undefined && task.sessionId !== sessionId) continue
+        result.push(taskSummary(task))
+      }
+      result.sort((a, b) => String(b.startedAt).localeCompare(String(a.startedAt)))
+      return result
+    })
+
+    harness.handle('dashboard.downloadTask', (taskId) => {
+      const id = normalizeTaskId(taskId)
+      const task = tasks.get(id)
+      if (task === undefined) throw new Error('未找到任务：' + id)
+      const lines = []
+      lines.push('# SSH 任务记录')
+      lines.push(taskDiagnostic(task))
+      lines.push('')
+      lines.push('## 启动命令')
+      lines.push(task.command)
+      lines.push('')
+      if (task.logTail !== null) {
+        lines.push('## 日志尾部')
+        lines.push(task.logTail)
+      }
+      if (task.resultData !== null) {
+        lines.push('## 结果数据')
+        lines.push(JSON.stringify(task.resultData, null, 2))
+      }
+      return { text: lines.join('\n'), filename: 'ssh-task-' + task.taskId + '.txt' }
+    })
 
     harness.handle('dashboard.downloadSession', (sessionId) => {
       const id = normalizeSessionId(sessionId)
@@ -551,6 +928,137 @@ return {
       output: { schema: { type: 'json' }, render(_args, value) { return [{ type: 'text', text: JSON.stringify(value, null, 2) }] } },
       timeoutMs: 125000,
       async execute(args, exec) { return runRemote(args.session, args.command, args.timeout_ms, exec.signal) }
+    }))
+
+    // ── Task tools ────────────────────────────────────────────────────────
+
+    harness.registerTool(ctx, harness.defineTool({
+      name: 'ssh_task_start',
+      description: '【异步任务】在 SSH 会话中启动一个后台长时间任务，返回 task_id 用于后续轮询。插件会跟踪 PID、结果文件和超时，区分"任务仍在运行"与"任务失败"。启动命令必须包含 nohup + & 并写入 PID 文件。例如：nohup bash script.sh > log.txt 2>&1 & echo $! > /tmp/task.pid',
+      parameters: {
+        session: { type: 'string', required: true, description: 'SSH 会话名称。' },
+        task_id: { type: 'string', required: true, description: '唯一任务标识符，用于后续轮询和停止。' },
+        command: { type: 'string', required: true, description: '启动后台任务的完整 Bash 命令，必须后台运行（&）并记录 PID。' },
+        pid_file: { type: 'string', description: 'PID 文件路径，用于跟踪进程状态。' },
+        result_file: { type: 'string', description: '结果文件路径，用于判断任务是否完成。' },
+        log_file: { type: 'string', description: '日志文件路径，用于采集诊断信息。' },
+        soft_timeout_ms: { type: 'integer', description: '软超时（毫秒），超过后标记为运行超预期但不终止。' },
+        hard_timeout_ms: { type: 'integer', description: '硬超时（毫秒），超过后标记为 TIMEOUT。默认 900000（15 分钟）。' },
+        poll_interval_ms: { type: 'integer', description: '建议轮询间隔（毫秒），默认 30000。' }
+      },
+      output: { schema: { type: 'json' }, render(_args, value) { return [{ type: 'text', text: JSON.stringify(value, null, 2) }] } },
+      async execute(args) {
+        const sessionId = normalizeSessionId(args.session)
+        const session = sessions.get(sessionId)
+        if (session === undefined) throw new Error('未找到 SSH 会话：' + sessionId + '。请先调用 ssh_session_open。')
+        if (session.status === 'closed') throw new Error('SSH 会话已正常断开：' + sessionId)
+        const taskId = normalizeTaskId(args.task_id)
+        if (tasks.has(taskId)) throw new Error('任务 ID 已存在：' + taskId)
+        const command = normalizeCommand(args.command)
+        const pidFile = optionalText(args.pid_file, 'PID 文件路径', 1024)
+        const resultFile = optionalText(args.result_file, '结果文件路径', 1024)
+        const logFile = optionalText(args.log_file, '日志文件路径', 1024)
+        const softTimeoutMs = args.soft_timeout_ms !== undefined ? Number(args.soft_timeout_ms) : 0
+        const hardTimeoutMs = args.hard_timeout_ms !== undefined ? Number(args.hard_timeout_ms) : 900000
+        const pollIntervalMs = args.poll_interval_ms !== undefined ? Number(args.poll_interval_ms) : 30000
+        if (hardTimeoutMs < 1000 || hardTimeoutMs > 3600000) throw new Error('硬超时必须是 1000 到 3600000 毫秒')
+        if (softTimeoutMs > 0 && softTimeoutMs < 1000) throw new Error('软超时不能小于 1000 毫秒')
+        if (pollIntervalMs < 1000 || pollIntervalMs > 300000) throw new Error('轮询间隔必须是 1000 到 300000 毫秒')
+        const result = await runRemote(sessionId, command, 30000, undefined)
+        if (!result.valid) {
+          return { taskId, status: TASK_STATUS.FAILED, message: '任务启动失败：' + (result.error || '未知错误'), transport: 'ok' }
+        }
+        const now = new Date().toISOString()
+        const task = {
+          taskId, sessionId, command, pidFile, resultFile, logFile,
+          status: TASK_STATUS.PENDING, pid: null, pidAlive: false, resultReady: false,
+          startedAt: now, completedAt: null, exitCode: null,
+          softTimeoutMs, hardTimeoutMs, pollIntervalMs, lastPollAt: null,
+          message: '任务已启动，等待首次状态检查', resultData: null, logTail: null
+        }
+        tasks.set(taskId, task)
+        return taskSummary(task)
+      }
+    }))
+
+    harness.registerTool(ctx, harness.defineTool({
+      name: 'ssh_task_status',
+      description: '【异步任务】轮询 SSH 任务状态。插件自动检查 PID 存活、结果文件、日志尾部，返回结构化状态。区分 transport=failed（SSH 连接失败）和 taskStatus=running（任务正常运行中）。不要因为探测命令返回非零退出码就认为任务失败——文件暂不存在不等于任务失败。',
+      parameters: {
+        session: { type: 'string', required: true, description: 'SSH 会话名称。' },
+        task_id: { type: 'string', required: true, description: '任务标识符。' }
+      },
+      output: { schema: { type: 'json' }, render(_args, value) { return [{ type: 'text', text: JSON.stringify(value, null, 2) }] } },
+      async execute(args) {
+        const sessionId = normalizeSessionId(args.session)
+        const session = sessions.get(sessionId)
+        if (session === undefined) throw new Error('未找到 SSH 会话：' + sessionId)
+        const taskId = normalizeTaskId(args.task_id)
+        const task = tasks.get(taskId)
+        if (task === undefined) throw new Error('未找到任务：' + taskId + '。请先调用 ssh_task_start。')
+        if (task.sessionId !== sessionId) throw new Error('任务不属于此会话')
+        if (task.status === TASK_STATUS.SUCCESS || task.status === TASK_STATUS.FAILED || task.status === TASK_STATUS.TIMEOUT || task.status === TASK_STATUS.CANCELLED) {
+          return taskSummary(task)
+        }
+        return pollTask(task)
+      }
+    }))
+
+    harness.registerTool(ctx, harness.defineTool({
+      name: 'ssh_task_stop',
+      description: '【异步任务】停止 SSH 后台任务。先尝试 SIGTERM 优雅终止，等待 3 秒后若无响应则使用 SIGKILL。只终止指定 task_id 对应的 PID，不会误杀其他实验。终止后记录原因和 PID。',
+      parameters: {
+        session: { type: 'string', required: true, description: 'SSH 会话名称。' },
+        task_id: { type: 'string', required: true, description: '任务标识符。' },
+        force: { type: 'boolean', description: '跳过 SIGTERM 直接使用 SIGKILL。默认 false。' }
+      },
+      output: { schema: { type: 'json' }, render(_args, value) { return [{ type: 'text', text: JSON.stringify(value, null, 2) }] } },
+      async execute(args) {
+        const sessionId = normalizeSessionId(args.session)
+        const session = sessions.get(sessionId)
+        if (session === undefined) throw new Error('未找到 SSH 会话：' + sessionId)
+        const taskId = normalizeTaskId(args.task_id)
+        const task = tasks.get(taskId)
+        if (task === undefined) throw new Error('未找到任务：' + taskId)
+        if (task.sessionId !== sessionId) throw new Error('任务不属于此会话')
+        if (task.status === TASK_STATUS.SUCCESS || task.status === TASK_STATUS.FAILED || task.status === TASK_STATUS.TIMEOUT || task.status === TASK_STATUS.CANCELLED) {
+          return { taskId, status: task.status, message: '任务已处于终态，无需停止', stopped: false }
+        }
+        const force = args.force === true
+        let stopCmd = ''
+        if (task.pidFile !== '') {
+          const escaped = task.pidFile.replace(/"/g, '\\"')
+          if (force) {
+            stopCmd = 'PIDFILE="' + escaped + '"; if [ -f "$PIDFILE" ]; then PID=$(cat "$PIDFILE"); kill -9 "$PID" 2>/dev/null; rm -f "$PIDFILE"; echo "KILLED_PID=$PID"; else echo "NO_PID_FILE"; fi'
+          } else {
+            stopCmd = 'PIDFILE="' + escaped + '"; if [ -f "$PIDFILE" ]; then PID=$(cat "$PIDFILE"); kill -15 "$PID" 2>/dev/null; sleep 3; kill -0 "$PID" 2>/dev/null && kill -9 "$PID" 2>/dev/null; rm -f "$PIDFILE"; echo "KILLED_PID=$PID"; else echo "NO_PID_FILE"; fi'
+          }
+        } else {
+          stopCmd = 'echo "NO_PID_FILE"'
+        }
+        const result = await runRemote(sessionId, stopCmd, 15000, undefined)
+        task.status = TASK_STATUS.CANCELLED
+        task.completedAt = new Date().toISOString()
+        task.message = '任务已被 Agent 取消'
+        return { taskId, status: TASK_STATUS.CANCELLED, message: '任务已停止', stopped: true, stopOutput: result.stdout || '', stopError: result.error || null }
+      }
+    }))
+
+    harness.registerTool(ctx, harness.defineTool({
+      name: 'ssh_task_list',
+      description: '列出所有 SSH 异步任务及其状态。可按会话过滤。',
+      parameters: { session: { type: 'string', description: '可选的会话名称过滤。' } },
+      output: { schema: { type: 'json' }, render(_args, value) { return [{ type: 'text', text: JSON.stringify(value, null, 2) }] } },
+      async execute(args) {
+        const sessionId = args.session !== undefined ? normalizeSessionId(args.session) : undefined
+        const result = []
+        for (const task of tasks.values()) {
+          if (sessionId !== undefined && task.sessionId !== sessionId) continue
+          result.push(taskSummary(task))
+        }
+        result.sort((a, b) => String(b.startedAt).localeCompare(String(a.startedAt)))
+        return { tasks: result, count: result.length }
+      }
     }))
   }
 }

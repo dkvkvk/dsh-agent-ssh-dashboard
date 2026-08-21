@@ -34,7 +34,7 @@ return {
       .ash-card-head,.ash-turn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.ash-session-name{min-width:0;font-size:14px;font-weight:650;overflow-wrap:anywhere}.ash-card-stats{margin-top:16px;color:var(--dsw-alias-label-secondary);font-size:11px}.ash-latest{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:11px;border-top:1px solid var(--dsw-alias-border-l1)}.ash-latest-text{min-width:0;overflow:hidden;color:var(--dsw-alias-label-secondary);font:11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}.ash-enter{flex:0 0 auto;color:var(--dsw-alias-label-secondary);font-size:19px}
       .ash-connection-alert{margin:12px 0 0;padding:10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-turn{padding:18px 0;border-bottom:1px solid var(--dsw-alias-border-l1)}.ash-turn:last-child{border-bottom:0}.ash-turn-index{color:var(--dsw-alias-label-secondary);font-size:11px;font-weight:650}.ash-message{width:min(88%,860px);padding:11px 12px;border-radius:6px}.ash-message[data-role='agent']{margin-left:auto;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 9%,var(--dsw-alias-bg-layer-1));border:1px solid color-mix(in srgb,var(--dsw-alias-brand-primary) 28%,var(--dsw-alias-border-l1))}.ash-message[data-role='remote']{margin-right:auto;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1)}.ash-message[data-error='true']{border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 45%,transparent)}
       .ash-role{margin-bottom:7px;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:650}.ash-turn-arrow{padding:7px 0;color:var(--dsw-alias-label-secondary);text-align:center;font-size:15px}.ash-command,.ash-stream{margin:0;color:var(--dsw-alias-label-primary);font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.ash-stream{max-height:280px;overflow:auto}.ash-stream-label{margin:9px 0 5px;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:650}.ash-failure{margin-bottom:10px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary)}.ash-failure-title{font-size:11px;font-weight:700}.ash-failure-message{margin-top:4px;font-size:11px;line-height:1.45;overflow-wrap:anywhere}.ash-meta{margin-top:8px;color:var(--dsw-alias-label-secondary);font-size:10px}
-      .ash-empty{padding:42px 12px;color:var(--dsw-alias-label-secondary);border-top:1px solid var(--dsw-alias-border-l1);border-bottom:1px solid var(--dsw-alias-border-l1);text-align:center;font-size:12px}.ash-error-banner{margin-bottom:12px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-streaming{display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--dsw-alias-state-warn-primary);border-radius:50%;animation:ash-pulse 1.2s ease-in-out infinite}@keyframes ash-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+      .ash-empty{padding:42px 12px;color:var(--dsw-alias-label-secondary);border-top:1px solid var(--dsw-alias-border-l1);border-bottom:1px solid var(--dsw-alias-border-l1);text-align:center;font-size:12px}.ash-error-banner{margin-bottom:12px;padding:9px 10px;color:var(--dsw-alias-state-error-primary);background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent);border-left:3px solid var(--dsw-alias-state-error-primary);font-size:11px}.ash-streaming{display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--dsw-alias-state-warn-primary);border-radius:50%;animation:ash-pulse 1.2s ease-in-out infinite}@keyframes ash-pulse{0%,100%{opacity:1}50%{opacity:.35}}.ash-task-card{margin:8px 0;padding:12px;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-border-l2);border-radius:6px}.ash-task-card[data-state='running']{border-left-color:var(--dsw-alias-state-warn-primary)}.ash-task-card[data-state='success']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-task-card[data-state='failed'],.ash-task-card[data-state='timeout']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-task-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.ash-task-name{font-size:13px;font-weight:650}.ash-task-meta{margin-top:8px;color:var(--dsw-alias-label-secondary);font-size:11px}.ash-task-message{margin-top:6px;padding:6px 8px;background:var(--dsw-alias-bg-layer-2);border-radius:4px;font-size:11px;line-height:1.45}
       .ash-tool{margin:6px 0;overflow:hidden;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l1);border-left:3px solid var(--dsw-alias-state-warn-primary);border-radius:6px}.ash-tool[data-state='valid']{border-left-color:var(--dsw-alias-state-success-primary)}.ash-tool[data-state='invalid']{border-left-color:var(--dsw-alias-state-error-primary)}.ash-tool-head{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:45px;gap:10px;padding:9px 10px;color:inherit;background:transparent;border:0;font:inherit;text-align:left;cursor:pointer}.ash-tool-body{padding:11px;border-top:1px solid var(--dsw-alias-border-l1)}.ash-stage{min-width:0;max-width:170px;padding:3px 6px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:1px solid var(--dsw-alias-border-l1);border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.ash-arrow{color:var(--dsw-alias-label-secondary);font-size:12px}
       @media(max-width:840px){.ash-overlay{padding:0}.ash-dialog{width:100vw;min-height:100vh;max-height:100vh;border:0;border-radius:0}.ash-root{padding:16px}.ash-header,.ash-toolbar,.ash-detail-summary{align-items:flex-start;flex-direction:column}.ash-session-grid{grid-template-columns:1fr}.ash-message{width:94%}.ash-stage{max-width:135px}}
     `), 'agent ssh connection health styles')
@@ -90,6 +90,24 @@ return {
       if (status === 'error') return '连接异常'
       if (status === 'closed') return '正常断开'
       return '待连接'
+    }
+
+    function taskStatusLabel(status) {
+      if (status === 'pending') return '等待启动'
+      if (status === 'running') return '运行中'
+      if (status === 'success') return '已完成'
+      if (status === 'failed') return '已失败'
+      if (status === 'timeout') return '已超时'
+      if (status === 'cancelled') return '已取消'
+      return '未知'
+    }
+
+    function taskStatusColor(status) {
+      if (status === 'running') return 'running'
+      if (status === 'success') return 'valid'
+      if (status === 'failed' || status === 'timeout') return 'invalid'
+      if (status === 'cancelled') return 'closed'
+      return 'ready'
     }
 
     function timeText(value) {
@@ -156,6 +174,24 @@ return {
           h('div', { className: 'ash-card-stats' }, h('div', { className: 'ash-inline' }, h('span', null, '命令 ' + String(session.commandCount)), h('span', null, '成功命令 ' + String(session.validCount)), h('span', null, '失败命令 ' + String(session.invalidCount))))
         ),
         h('div', { className: 'ash-latest' }, h('span', { className: 'ash-latest-text' }, preview), h('span', { className: 'ash-enter' }, '›'))
+      )
+    }
+
+    function TaskCard(props) {
+      const task = props.task
+      const elapsed = Math.floor(task.elapsedMs / 1000)
+      const elapsedStr = elapsed < 60 ? String(elapsed) + 's' : (elapsed < 3600 ? String(Math.floor(elapsed / 60)) + 'm ' + String(elapsed % 60) + 's' : String(Math.floor(elapsed / 3600)) + 'h ' + String(Math.floor((elapsed % 3600) / 60)) + 'm')
+      const color = taskStatusColor(task.status)
+      return h('div', { className: 'ash-task-card', 'data-state': color },
+        h('div', { className: 'ash-task-head' },
+          h('div', { className: 'ash-task-name' }, task.taskId, task.status === 'running' ? h('span', { className: 'ash-streaming', style: { marginLeft: '6px' } }) : null),
+          h(Badge, { state: color }, taskStatusLabel(task.status))
+        ),
+        h('div', { className: 'ash-task-meta' },
+          h('span', null, '会话：' + task.sessionId + ' · 已运行：' + elapsedStr),
+          task.pid !== null ? h('span', null, ' · PID：' + String(task.pid)) : null
+        ),
+        task.message ? h('div', { className: 'ash-task-message' }, task.message) : null
       )
     }
 
@@ -228,7 +264,8 @@ return {
         selected === null ? h('div', null,
           h('div', { className: 'ash-toolbar' }, h('div', { className: 'ash-segments' }, h('button', { type: 'button', 'data-active': filter === 'all' ? 'true' : undefined, onClick: () => setFilter('all') }, '全部'), h('button', { type: 'button', 'data-active': filter === 'active' ? 'true' : undefined, onClick: () => setFilter('active') }, '活动'), h('button', { type: 'button', 'data-active': filter === 'running' ? 'true' : undefined, onClick: () => setFilter('running') }, '执行中'), h('button', { type: 'button', 'data-active': filter === 'error' ? 'true' : undefined, onClick: () => setFilter('error') }, '连接异常')), h('button', { className: 'ash-icon-btn', type: 'button', title: '刷新', disabled: refreshing, onClick: refresh }, '↻')),
           error ? h('div', { className: 'ash-error-banner' }, error) : null,
-          visible.length === 0 ? h('div', { className: 'ash-empty' }, state.sessions.length === 0 ? '等待 Agent 创建 SSH 会话' : '没有匹配的会话') : h('div', { className: 'ash-session-grid' }, visible.map((session) => h(SessionCard, { session, key: session.id, onOpen: () => setSelectedId(session.id) })))
+          visible.length === 0 ? h('div', { className: 'ash-empty' }, state.sessions.length === 0 ? '等待 Agent 创建 SSH 会话' : '没有匹配的会话') : h('div', { className: 'ash-session-grid' }, visible.map((session) => h(SessionCard, { session, key: session.id, onOpen: () => setSelectedId(session.id) }))),
+          state.tasks && state.tasks.length > 0 ? h('div', null, h('div', { style: { margin: '18px 0 8px', fontSize: '14px', fontWeight: 650 } }, '异步任务(' + String(state.tasks.length) + ')'), state.tasks.map((task) => h(TaskCard, { task, key: task.taskId }))) : null
         ) : h('div', null, h('div', { className: 'ash-toolbar' }, h('span', { className: 'ash-sub' }, 'Agent 命令与远端响应按时间排列'), h('button', { className: 'ash-icon-btn', type: 'button', title: '刷新', disabled: refreshing, onClick: refresh }, '↻')), error ? h('div', { className: 'ash-error-banner' }, error) : null, h(SessionDetail, { session: selected }))
       )
     }
