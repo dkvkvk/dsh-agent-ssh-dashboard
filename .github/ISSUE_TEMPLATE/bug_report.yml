@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a reproducible SSH session or dashboard problem
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include private keys, passwords, access tokens, or production host details.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed behavior
+      description: Include sanitized Tool fields, state transitions, and relevant exit facts.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Area
+      options:
+        - Connection lifecycle
+        - Command classification
+        - OpenSSH process handling
+        - Dashboard UI
+        - Installation or packaging
+    validations:
+      required: true
+  - type: input
+    id: dsh
+    attributes:
+      label: DSH version
+  - type: input
+    id: platform
+    attributes:
+      label: Host operating system and OpenSSH version
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal sanitized reproduction
+    validations:
+      required: true

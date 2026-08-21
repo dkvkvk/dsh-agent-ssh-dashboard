@@ -1,0 +1,8 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "src/dynamic/host.js": "4ae7a32726cac46d78b226222116c606492f597218fb5848cab465f3f91575ad",
+    "src/dynamic/client.js": "6e9dbd35b183ab4d7dedf038ccc069125edde7f55cd1f5d8b3753a1be0c69def",
+    "dist/cordis-package.json": "b6a0fc74308ad0a1d86823d16e3b46838bf3e35643f107973b3881f68668756f"
+  }
+}

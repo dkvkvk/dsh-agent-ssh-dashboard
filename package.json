@@ -1,0 +1,45 @@
+{
+  "name": "dsh-agent-ssh-dashboard",
+  "version": "0.1.0",
+  "description": "Agent-managed SSH sessions with a read-only drill-down dashboard for DeepSeek Harness",
+  "type": "module",
+  "license": "MIT",
+  "author": "wuzhuoye666",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuzhuoye666/dsh-agent-ssh-dashboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wuzhuoye666/dsh-agent-ssh-dashboard/issues"
+  },
+  "homepage": "https://github.com/wuzhuoye666/dsh-agent-ssh-dashboard#readme",
+  "keywords": [
+    "deepseek",
+    "dsh",
+    "cordis",
+    "ssh",
+    "dashboard",
+    "agent"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "files": [
+    "dist/**",
+    "src/dynamic/**",
+    "docs/**",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/dynamic-package.test.mjs test/host-behavior.test.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "check": "npm run clean && npm run build && npm test && npm run check:secrets",
+    "pack:check": "npm pack --dry-run"
+  }
+}

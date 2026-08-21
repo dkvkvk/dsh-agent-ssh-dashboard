@@ -1,0 +1,7 @@
+{
+  "sourcePluginId": "sshman-2",
+  "sourcePackageId": "pkg-14",
+  "name": "SSH Connection Health",
+  "purpose": "将 SSH 会话连接健康与内部命令成败分离，并明确区分远端退出码和本地 SSH 进程退出码。",
+  "exportedAt": "2026-08-21T03:33:12.838Z"
+}

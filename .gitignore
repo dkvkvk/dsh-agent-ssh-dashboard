@@ -1,0 +1,14 @@
+node_modules/
+coverage/
+*.log
+*.tgz
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+known_hosts*
