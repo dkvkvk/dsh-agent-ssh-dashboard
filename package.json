@@ -25,15 +25,15 @@
     "react": "^18.3.1"
   },
   "license": "MIT",
-  "author": "wuzhuoye666",
+  "author": "dkvkvk",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wuzhuoye666/dsh-agent-ssh-dashboard.git"
+    "url": "git+https://github.com/dkvkvk/dsh-agent-ssh-dashboard.git"
   },
   "bugs": {
-    "url": "https://github.com/wuzhuoye666/dsh-agent-ssh-dashboard/issues"
+    "url": "https://github.com/dkvkvk/dsh-agent-ssh-dashboard/issues"
   },
-  "homepage": "https://github.com/wuzhuoye666/dsh-agent-ssh-dashboard#readme",
+  "homepage": "https://github.com/dkvkvk/dsh-agent-ssh-dashboard#readme",
   "keywords": [
     "deepseek",
     "dsh",
