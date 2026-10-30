@@ -5,7 +5,7 @@ return {
     const slots = ctx.get('slots')
     if (slots === undefined) return
     const h = React.createElement
-    let overlayOpen = true
+    let overlayOpen = false
     const overlayListeners = new Set()
 
     function setOverlayOpen(next) {
@@ -148,6 +148,16 @@ return {
 
       /* section title */
       .cx-section-title{margin:18px 0 6px;font-size:12px;font-weight:600;color:#656d76;text-transform:uppercase;letter-spacing:.05em}
+
+      /* sidebar footer entry（原生 shell 风格：跟随明暗主题 token） */
+      .cx-sideentry-stack{display:flex;flex:none;width:100%;min-width:0;height:42px;margin:8px 0 0}
+      .cx-sideentry{display:flex;align-items:center;gap:8px;box-sizing:border-box;width:100%;min-width:0;height:42px;padding:0 10px 0 8px;color:var(--dsw-alias-label-primary);font-family:inherit;font-size:14px;line-height:22px;text-align:left;cursor:pointer;background:0 0;border:0;border-radius:12px;overflow:hidden}
+      .cx-sideentry:hover,.cx-sideentry:focus-visible{background:var(--dsw-alias-interactive-bg-hover);outline:none}
+      .cx-sideentry-glyph{flex:none;display:inline-flex;align-items:center;justify-content:center}
+      .cx-sideentry-glyph svg{display:block;width:18px;height:18px}
+      .cx-sideentry-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .cx-sideentry-stack.rail{align-items:center;width:36px;height:36px;margin:0}
+      .cx-sideentry.rail{justify-content:center;width:36px;height:36px;padding:0;border-radius:50%}
 
       @media(max-width:840px){.cx-overlay{padding:0}.cx-dialog{width:100vw;min-height:100vh;max-height:100vh;border:0;border-radius:0}.cx-root{padding:14px}.cx-header,.cx-toolbar,.cx-detail-summary{align-items:flex-start;flex-direction:column}.cx-session-grid{grid-template-columns:1fr}.cx-msg{width:96%}.cx-stage{max-width:120px}}
     `), 'ssh-dashboard styles')
@@ -501,13 +511,31 @@ return {
       )
     }
 
-    function HeaderAction() {
-      return h('button', { className: 'cx-btn primary', type: 'button', title: 'SSH 会话', onClick: function() { setOverlayOpen(true) } }, '>_ SSH')
+    /** 内联终端图标：跟随主题前景色（currentColor），宽侧栏与收窄 rail 两种形态共用。 */
+    var TERMINAL_ICON = '<svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.75" y="2.25" width="12.5" height="11.5" rx="1.75"/><path d="M4.25 5.25l2.75 2.75-2.75 2.75"/><path d="M8.5 10.75h3.25"/></svg>'
+
+    function FooterAction(props) {
+      var wide = props && props.wide !== false
+      return h('div', { className: wide ? 'cx-sideentry-stack' : 'cx-sideentry-stack rail' },
+        h('button', {
+          className: wide ? 'cx-sideentry' : 'cx-sideentry rail',
+          type: 'button',
+          title: 'SSH 会话',
+          'aria-label': 'SSH 会话',
+          onClick: function() { setOverlayOpen(true) }
+        },
+          h('span', { className: 'cx-sideentry-glyph', 'aria-hidden': 'true', dangerouslySetInnerHTML: { __html: TERMINAL_ICON } }),
+          wide ? h('span', { className: 'cx-sideentry-label' }, 'SSH 会话') : null
+        )
+      )
     }
 
     slots.inject('settings.section', function() { return slots.register({ name: 'settings.section', id: 'ssh-dashboard', order: 12, label: 'SSH 会话' }, function() { return h(Dashboard) }) })
     slots.inject('tool.call.toolview', function() { return slots.register({ name: 'tool.call.toolview', key: 'ssh_bash' }, function(props) { return h(ToolCard, props) }) })
     slots.inject('shell.overlay', function() { return slots.register({ name: 'shell.overlay', id: 'agent-ssh-dashboard', order: 5, label: 'SSH 会话' }, function() { return h(Overlay) }) })
-    slots.inject('conversation.session.header.actions', function() { return slots.register({ name: 'conversation.session.header.actions', id: 'agent-ssh-dashboard', order: 15, label: 'SSH 会话' }, function() { return h(HeaderAction) }) })
+    // 组件直接作为 slot registrant 传入：渲染器会把 shell 下发的 props
+    // （收窄态 wide=false 等）展开成它的 props。包一层 function(){ return h(...) }
+    // 会把 props 吞掉，导致 rail 收窄后仍渲染宽版文字行而不是图标按钮。
+    slots.inject('sidebar.footer.action', function() { return slots.register({ name: 'sidebar.footer.action', id: 'agent-ssh-dashboard', order: 90, label: 'SSH 会话' }, FooterAction) })
   }
 }

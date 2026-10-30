@@ -24,7 +24,7 @@ The Agent owns connection parameters and remote execution. The human-facing UI i
 `src/dynamic/client.js` returns a Dynamic Cordis Client Plugin. It:
 
 - polls the package-private dashboard snapshot;
-- registers additive UI in `shell.overlay`, `settings.section`, and `conversation.session.header.actions`;
+- registers additive UI in `shell.overlay`, `settings.section`, and `sidebar.footer.action`;
 - owns the `ssh_bash` Tool call view;
 - shows one card per logical session;
 - drills into ordered Agent-command and remote-response turns;

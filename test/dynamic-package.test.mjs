@@ -57,9 +57,9 @@ test('Client registers all intended UI slots without direct DOM access', () => {
   assert.deepEqual(
     registrations.map(({ options }) => options.name).sort(),
     [
-      'conversation.session.header.actions',
       'settings.section',
       'shell.overlay',
+      'sidebar.footer.action',
       'tool.call.toolview',
     ],
   )
